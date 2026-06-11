@@ -2,27 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>AMOS — Builder. Systems. Software.</title>
-  <meta name="description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
-  <meta property="og:title" content="AMOS — Builder. Systems. Software." />
-  <meta property="og:description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AMOS — engineer</title>
+  <meta name="description" content="AMOS — engineer. Autonomous drones, HFT frameworks, full-stack products. Singapore." />
   <meta name="theme-color" content="#F4F1EA" />
 
-  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <!-- JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='12,3 22,21 2,21' fill='none' stroke='%230A0A0A' stroke-width='2'/></svg>" />
 </head>
 <body>
-  <!-- Subtle scanline texture (paper grain) -->
-  <div class="scanlines" aria-hidden="true"></div>
-
-  <!-- NAV -->
+  <!-- ========================================================
+       NAV — fixed, with scroll-progress bar
+       ======================================================== -->
   <header class="nav" id="nav">
+    <span class="nav__progress" aria-hidden="true"></span>
     <a href="#top" class="nav__logo" aria-label="Home">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
         <polygon points="12,3 22,21 2,21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
@@ -31,7 +29,7 @@
     </a>
     <nav class="nav__links" aria-label="Primary">
       <a href="#work">WORK</a>
-      <a href="#scene">MOTION</a>
+      <a href="#process">PROCESS</a>
       <a href="#about">ABOUT</a>
       <a href="#stack">STACK</a>
       <a href="#contact">CONTACT</a>
@@ -45,33 +43,31 @@
   <main id="top">
 
     <!-- ========================================================
-         HERO — typographic, asymmetric, single 3D geometry
+         HERO — typographic, full-width. No 3D.
          ======================================================== -->
     <section class="hero" data-reveal>
-      <div class="hero__text">
-        <div>
-          <span class="eyebrow eyebrow--accent hero__eyebrow">AVAILABLE · 2026 · SINGAPORE</span>
+      <div class="hero__inner">
+        <span class="eyebrow eyebrow--accent hero__eyebrow">AVAILABLE · 2026 · SINGAPORE</span>
 
-          <h1 class="h-display hero__title">
-            <span>BUILDER</span><br/>
-            <span>OF</span><br/>
-            <span class="fill-accent">SYSTEMS.</span>
-          </h1>
+        <h1 class="h-display hero__title">
+          <span class="hero__line">BUILDER</span>
+          <span class="hero__line">OF</span>
+          <span class="hero__line"><span class="fill-accent">SYSTEMS.</span></span>
+        </h1>
 
-          <p class="hero__sub">
-            <strong>AMOS</strong> &mdash; engineer. Autonomous drones, HFT frameworks, full-stack products.
-            I build things that have to <em>actually</em> work, then ship them.
-          </p>
+        <p class="hero__sub">
+          <strong>AMOS</strong> &mdash; engineer. Autonomous drones, HFT frameworks, full-stack products.
+          I build things that have to <em>actually</em> work, then ship them.
+        </p>
 
-          <div class="hero__ctas">
-            <a class="pill pill--solid pill--big" href="#work">
-              <span class="pill__label">SEE SELECTED WORK</span>
-              <span class="pill__icon" aria-hidden="true">↓</span>
-            </a>
-            <a class="pill pill--ghost pill--big" href="#contact">
-              <span class="pill__label">GET IN TOUCH</span>
-            </a>
-          </div>
+        <div class="hero__ctas">
+          <a class="pill pill--solid pill--big" href="#work">
+            <span class="pill__label">SEE SELECTED WORK</span>
+            <span class="pill__icon" aria-hidden="true">↓</span>
+          </a>
+          <a class="pill pill--ghost pill--big" href="#contact">
+            <span class="pill__label">GET IN TOUCH</span>
+          </a>
         </div>
 
         <div class="hero__meta">
@@ -79,15 +75,6 @@
           <div><span>REPOS</span><span>72+ GITHUB</span></div>
           <div><span>POSTURE</span><span>SHIP FAST · ITERATE</span></div>
         </div>
-      </div>
-
-      <div class="hero__stage" id="heroStage" aria-label="Geometry stage">
-        <span class="hero__stage-label">/ GEOMETRY · 01</span>
-        <span class="hero__stage-coord">
-          <b>SOLID.WIRE</b>
-          X: 0.00  Y: 0.00  Z: 0.00
-        </span>
-        <!-- canvas mounted by three-hero.js -->
       </div>
     </section>
 
@@ -133,7 +120,8 @@
     </section>
 
     <!-- ========================================================
-         WORK — table (not card grid)
+         WORK — table (not card grid). 7 columns:
+         NO. | NAME | LANG | DESCRIPTION | TOPICS | DEMO | REPO
          ======================================================== -->
     <section id="work" class="work" data-reveal>
       <header class="work__head">
@@ -142,19 +130,22 @@
         <span class="count"><b>09</b> ITEMS</span>
       </header>
 
-      <table class="work-table" id="workTable">
-        <thead>
-          <tr>
-            <th class="col-no">NO.</th>
-            <th>NAME</th>
-            <th class="col-lang">LANG</th>
-            <th class="col-desc-head">DESCRIPTION</th>
-            <th class="col-topics-head">TOPICS</th>
-            <th class="col-link">REPO</th>
-          </tr>
-        </thead>
-        <tbody><!-- rows injected by app.js from window.PROJECTS --></tbody>
-      </table>
+      <div class="work__tablewrap">
+        <table class="work-table" id="workTable">
+          <thead>
+            <tr>
+              <th class="col-no">NO.</th>
+              <th>NAME</th>
+              <th class="col-lang">LANG</th>
+              <th class="col-desc-head">DESCRIPTION</th>
+              <th class="col-topics-head">TOPICS</th>
+              <th class="col-demo-head">DEMO</th>
+              <th class="col-link">REPO</th>
+            </tr>
+          </thead>
+          <tbody><!-- rows injected by app.js from window.PROJECTS --></tbody>
+        </table>
+      </div>
 
       <a class="pill pill--ghost work__more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
         <span class="pill__label">SEE ALL 72 REPOS</span>
@@ -163,32 +154,64 @@
     </section>
 
     <!-- ========================================================
-         SCENE — sticky geometry + scrolling type
+         PROCESS — vertical timeline. Replaces the 3D scene.
+         4 steps, scroll-tied rail fill.
          ======================================================== -->
-    <section id="scene" class="scene3d" data-reveal>
-      <div class="scene3d__sticky">
-        <div class="scene3d__canvas" id="sceneCanvas" aria-label="Geometry stage">
-          <span class="scene3d__readout">
-            <b>/ GEOMETRY · 02</b><br/>
-            STATE: <span id="sceneState">STATEFUL</span>
-          </span>
-          <!-- canvas mounted by three-scene.js -->
-        </div>
-        <div class="scene3d__copy">
-          <div class="scene3d__head">
-            <span class="eyebrow">02 — IN MOTION</span>
-            <h2 class="h2">A SHAPE<br/>THAT <span class="fill-accent">REPLIES</span><br/>TO SCROLL.</h2>
-          </div>
-          <p class="scene3d__lede" id="sceneLede">
-            Real-time stateful systems &mdash; inputs and outputs coupled, feedback tight.
-          </p>
-          <ol class="scene3d__steps" id="sceneSteps">
-            <li class="scene3d__step" data-step="0" data-no="[01]" data-state="STATEFUL"     data-lede="Real-time stateful systems — inputs and outputs coupled, feedback tight.">KNOT</li>
-            <li class="scene3d__step" data-step="1" data-no="[02]" data-state="DETERMINISTIC" data-lede="Deterministic, predictable loops — bounded, observable, never surprising.">TORUS</li>
-            <li class="scene3d__step" data-step="2" data-no="[03]" data-state="STRUCTURED"   data-lede="Structured, faceted decisions — many small surfaces, one coherent whole.">SPHERE</li>
-            <li class="scene3d__step" data-step="3" data-no="[04]" data-state="EMERGENT"     data-lede="Exploration at scale — many actors, one emerging pattern.">CLUSTER</li>
-          </ol>
-        </div>
+    <section id="process" class="process" data-reveal>
+      <div class="wrap">
+        <header class="section__head">
+          <span class="eyebrow">02 — PROCESS</span>
+          <h2 class="h2">HOW I<br/>BUILD <span class="fill-accent">THINGS</span>.</h2>
+          <p class="body-text">Four modes, mixed and matched depending on the problem. None of them are sacred.</p>
+        </header>
+
+        <ol class="timeline" aria-label="Process steps">
+          <span class="timeline__rail" aria-hidden="true"></span>
+
+          <li class="timeline__step">
+            <span class="timeline__no">[01]</span>
+            <h3 class="timeline__title">STATEFUL <span class="timeline__count">· 60%</span></h3>
+            <p class="timeline__body">Real-time stateful systems &mdash; inputs and outputs coupled, feedback tight. The kind where you can't lie about the latency budget because the test fails.</p>
+            <ul class="timeline__bullets">
+              <li>drones, control loops, trading</li>
+              <li>events in, events out, no drama</li>
+              <li>logs you can grep at 3am</li>
+            </ul>
+          </li>
+
+          <li class="timeline__step">
+            <span class="timeline__no">[02]</span>
+            <h3 class="timeline__title">DETERMINISTIC <span class="timeline__count">· 25%</span></h3>
+            <p class="timeline__body">Deterministic, predictable loops &mdash; bounded, observable, never surprising. The boring backbone that lets the interesting parts stay interesting.</p>
+            <ul class="timeline__bullets">
+              <li>queues, batch jobs, pipelines</li>
+              <li>idempotent, retried, audited</li>
+              <li>tests that actually catch the bug</li>
+            </ul>
+          </li>
+
+          <li class="timeline__step">
+            <span class="timeline__no">[03]</span>
+            <h3 class="timeline__title">STRUCTURED <span class="timeline__count">· 10%</span></h3>
+            <p class="timeline__body">Structured, faceted decisions &mdash; many small surfaces, one coherent whole. The kind of code that gets read more than written.</p>
+            <ul class="timeline__bullets">
+              <li>domain models, schemas, types</li>
+              <li>typed boundaries, not linter religion</li>
+              <li>docs that match the code</li>
+            </ul>
+          </li>
+
+          <li class="timeline__step">
+            <span class="timeline__no">[04]</span>
+            <h3 class="timeline__title">EMERGENT <span class="timeline__count">· 5%</span></h3>
+            <p class="timeline__body">Exploration at scale &mdash; many actors, one emerging pattern. Reserved for the projects where the answer isn't known yet and the budget is to find it.</p>
+            <ul class="timeline__bullets">
+              <li>multi-agent systems, sims, RL</li>
+              <li>research code that ships anyway</li>
+              <li>honest eval, not vibes</li>
+            </ul>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -225,19 +248,19 @@
           </div>
           <div class="about__right">
             <div class="about__stat">
-              <span class="num">05</span>
+              <span class="num" data-target="5">05</span>
               <span class="lbl">YEARS SHIPPING</span>
             </div>
             <div class="about__stat">
-              <span class="num">72</span>
+              <span class="num" data-target="72">72</span>
               <span class="lbl">REPOS ON GITHUB</span>
             </div>
             <div class="about__stat">
-              <span class="num">04</span>
+              <span class="num" data-target="4">04</span>
               <span class="lbl">CATEGORIES</span>
             </div>
             <div class="about__stat">
-              <span class="num">01</span>
+              <span class="num" data-target="1">01</span>
               <span class="lbl">TIMEZONE · UTC+8</span>
             </div>
           </div>
@@ -285,9 +308,9 @@
                 <span class="item">REACT</span>
                 <span class="item">NEXT.JS</span>
                 <span class="item">VITE</span>
-                <span class="item">THREE.JS</span>
                 <span class="item">TAILWIND</span>
-                <span class="item">GSAP</span>
+                <span class="item">JOTAI / ZUSTAND</span>
+                <span class="item">GSAP / LENIS</span>
               </td>
               <td>
                 <span class="item">PYTORCH</span>
@@ -310,7 +333,10 @@
       <div class="cta__inner">
         <span class="eyebrow eyebrow--hot cta__eyebrow">05 — CONTACT</span>
         <h2 class="h-display cta__title">
-          HAVE<br/>SOMETHING<br/><span class="fill-accent">INTERESTING</span><br/>TO BUILD?
+          <span class="cta__line">HAVE</span>
+          <span class="cta__line">SOMETHING</span>
+          <span class="cta__line"><span class="fill-accent">INTERESTING</span></span>
+          <span class="cta__line">TO BUILD?</span>
         </h2>
         <p class="body-text cta__sub">
           I take on <em>select</em> work &mdash; the kind where the problem is sharp
@@ -337,14 +363,8 @@
     </footer>
   </main>
 
-  <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
-  </script>
-
   <script src="./projects.js"></script>
   <script src="./marquee.js"></script>
-  <script type="module" src="./three-hero.js"></script>
-  <script type="module" src="./three-scene.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

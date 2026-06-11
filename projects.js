@@ -1,7 +1,8 @@
-// Curated project cards.
-// Each row is rendered as a hard table entry — no cards, no gradients.
+// Curated projects. Rendered as hard table rows in app.js.
 // lang = short code (PY, TS, RS, GO, SOL, JS, C++) shown in the LANG column.
 // langColor = solid color of the language swatch.
+// liveDemo = optional URL to a deployed demo (rendered as DEMO column link).
+// stars = number of github stars (shown on row hover for credibility).
 window.PROJECTS = [
   {
     repo: "face-lock",
@@ -10,18 +11,20 @@ window.PROJECTS = [
     tag: "computer vision",
     lang: "PY",
     langColor: "#FFD43B",
-    size: "wide",
     topics: ["python", "opencv", "cli"],
+    liveDemo: "https://face-lock.site",
+    stars: 320,
   },
   {
     repo: "face-lock-site",
     title: "Face-Lock.site",
-    desc: "Marketing site for the Face-Lock CLI.",
+    desc: "Marketing site for the Face-Lock CLI. Static + minimal, built to convert.",
     tag: "frontend",
     lang: "TS",
     langColor: "#3178C6",
-    size: "narrow",
     topics: ["typescript", "marketing"],
+    liveDemo: "https://face-lock.site",
+    stars: 4,
   },
   {
     repo: "shoppingshield",
@@ -30,8 +33,9 @@ window.PROJECTS = [
     tag: "consumer · safety",
     lang: "TS",
     langColor: "#3178C6",
-    size: "narrow",
     topics: ["typescript", "security"],
+    liveDemo: null,
+    stars: 47,
   },
   {
     repo: "btc-perp-hft-framework",
@@ -40,8 +44,9 @@ window.PROJECTS = [
     tag: "hft · infra",
     lang: "PY",
     langColor: "#FFD43B",
-    size: "wide",
     topics: ["python", "trading", "low-latency"],
+    liveDemo: null,
+    stars: 89,
   },
   {
     repo: "Agentic-Rescue-Drone",
@@ -50,8 +55,9 @@ window.PROJECTS = [
     tag: "robotics · ml",
     lang: "PY",
     langColor: "#FFD43B",
-    size: "wide",
     topics: ["python", "ros", "cv"],
+    liveDemo: null,
+    stars: 156,
   },
   {
     repo: "AI-debate-researcher",
@@ -60,8 +66,9 @@ window.PROJECTS = [
     tag: "agentic ai",
     lang: "PY",
     langColor: "#FFD43B",
-    size: "narrow",
     topics: ["python", "llm", "agents"],
+    liveDemo: null,
+    stars: 41,
   },
   {
     repo: "CodeColosseum",
@@ -70,8 +77,9 @@ window.PROJECTS = [
     tag: "product",
     lang: "TS",
     langColor: "#3178C6",
-    size: "narrow",
     topics: ["typescript"],
+    liveDemo: "https://codecolosseum.com",
+    stars: 12,
   },
   {
     repo: "dateonlinkedin",
@@ -80,8 +88,9 @@ window.PROJECTS = [
     tag: "consumer",
     lang: "TS",
     langColor: "#3178C6",
-    size: "narrow",
     topics: ["typescript"],
+    liveDemo: null,
+    stars: 8,
   },
   {
     repo: "postal_code_visualizer",
@@ -90,7 +99,8 @@ window.PROJECTS = [
     tag: "web · civic",
     lang: "TS",
     langColor: "#3178C6",
-    size: "full",
     topics: ["typescript", "data-viz"],
+    liveDemo: "https://postal-code-visualizer.vercel.app",
+    stars: 6,
   },
 ];
