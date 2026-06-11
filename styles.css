@@ -32,7 +32,8 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
+html {
+  overflow-x: clip;        /* doesn't establish a scroll container (unlike hidden) */
   background: var(--bg);
   color: var(--fg);
   font-family: var(--display);
@@ -41,10 +42,9 @@ html, body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
-
 body {
+  overflow-x: clip;
   background:
     radial-gradient(1200px 800px at 80% -10%, rgba(182,255,107,0.10), transparent 60%),
     radial-gradient(900px 600px at 0% 30%, rgba(255,107,157,0.08), transparent 60%),
@@ -140,6 +140,59 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .nav__cta:hover { background: var(--accent); color: #0A0A0F; border-color: var(--accent); }
 @media (max-width: 720px) { .nav__links { display: none; } }
 
+/* ============== HERO 3D ============== */
+.hero3d {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 50vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+.hero3d.is-ready { opacity: 1; }
+.hero3d canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+.hero3d-fallback {
+  position: fixed;
+  top: 0; right: 0;
+  width: 50vw; height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 50% at 60% 40%, rgba(182,255,107,0.18), transparent 60%),
+    radial-gradient(30% 40% at 40% 70%, rgba(107,203,255,0.12), transparent 60%);
+  filter: blur(20px);
+  display: none;
+}
+.no-webgl .hero3d { display: none; }
+.no-webgl .hero3d-fallback { display: block; }
+
+/* Constrain hero text to the left half so it never collides with the 3D */
+@media (min-width: 901px) {
+  .hero__inner { max-width: min(50vw, 720px); }
+  .hero__title { font-size: clamp(40px, 5.4vw, 88px); }
+  .hero__sub { max-width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .hero3d, .hero3d-fallback {
+    position: absolute;
+    width: 100vw;
+    height: 50vh;
+    top: 0;
+    right: 0;
+    opacity: 0.55;
+  }
+  .hero3d.is-ready { opacity: 0.55; }
+  .hero { padding-top: 56vh; }
+}
+
 /* ============== HERO ============== */
 .hero {
   position: relative;
@@ -150,14 +203,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   isolation: isolate;
   overflow: hidden;
 }
-.hero__canvas {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  z-index: -1;
-  opacity: 0.7;
-}
 .hero__inner {
   position: relative;
+  z-index: 2;
   width: 100%;
   max-width: var(--max);
   margin: 0 auto;
@@ -340,6 +388,79 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
+}
+
+/* ============== SCROLL-PINNED 3D SCENE ============== */
+.scene3d {
+  position: relative;
+  height: 220vh;        /* gives 2 viewport-heights of scroll to drive the scene */
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 50%, var(--bg) 100%);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.scene3d__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(24px, 5vw, 80px);
+  align-items: center;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+.scene3d__canvas {
+  position: relative;
+  width: 100%;
+  height: 80vh;
+  max-height: 720px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), transparent 70%);
+  border: 1px solid var(--line);
+}
+.scene3d__canvas canvas { display: block; width: 100% !important; height: 100% !important; }
+.scene3d__copy { max-width: 560px; }
+.scene3d__steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+.scene3d__steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--fg-faint);
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.scene3d__steps li span {
+  color: var(--fg-faint);
+  font-weight: 500;
+}
+.scene3d__steps li.is-active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(182,255,107,0.06);
+}
+.scene3d__steps li.is-active span { color: var(--accent); }
+
+@media (max-width: 900px) {
+  .scene3d { height: auto; padding: 80px 0; }
+  .scene3d__sticky {
+    position: relative;
+    height: auto;
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .scene3d__canvas { height: 50vh; }
 }
 
 /* ============== SECTION BASE ============== */

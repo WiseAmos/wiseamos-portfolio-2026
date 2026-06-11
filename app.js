@@ -16,6 +16,19 @@
     stamp.textContent = d.toISOString().slice(0,10);
   }
 
+  // ---------- WEBGL FEATURE DETECT ----------
+  // Three.js itself runs a probe; if it throws, the import rejects and our
+  // module-level handlers will set a class on <html>. As a backup we test here.
+  (() => {
+    try {
+      const c = document.createElement('canvas');
+      const gl = c.getContext('webgl2') || c.getContext('webgl');
+      if (!gl) document.documentElement.classList.add('no-webgl');
+    } catch (e) {
+      document.documentElement.classList.add('no-webgl');
+    }
+  })();
+
   // ---------- CURSOR GLOW ----------
   const glow = document.querySelector('.cursor-glow');
   let mx = window.innerWidth/2, my = window.innerHeight/2;
@@ -31,52 +44,37 @@
   }
   loop();
 
-  // ---------- HERO CANVAS ----------
-  // A lightweight, GPU-friendly "orbiting mesh" of blobs.
-  const canvas = document.getElementById('heroCanvas');
-  if (canvas && canvas.getContext) {
-    const ctx = canvas.getContext('2d', { alpha: true });
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let W = 0, H = 0;
-    const blobs = [
-      { x: 0.2, y: 0.3, r: 0.32, hue: 95,  sat: 95, l: 65, vx: 0.00020, vy: 0.00015, phase: 0 },
-      { x: 0.8, y: 0.2, r: 0.28, hue: 330, sat: 95, l: 70, vx:-0.00018, vy: 0.00022, phase: 1.2 },
-      { x: 0.5, y: 0.7, r: 0.34, hue: 200, sat: 90, l: 65, vx: 0.00014, vy:-0.00020, phase: 2.4 },
-      { x: 0.3, y: 0.8, r: 0.22, hue: 60,  sat: 95, l: 65, vx: 0.00018, vy: 0.00010, phase: 3.1 },
-    ];
-    function resize() {
-      const r = canvas.getBoundingClientRect();
-      W = r.width; H = r.height;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resize();
-    window.addEventListener('resize', resize);
+  // ---------- HERO 3D ----------
+  // Module is loaded separately (three-hero.js). It owns the renderer.
+  // We just listen for the ready event to fade it in.
+  window.addEventListener('hero3d:ready', () => {
+    const el = document.getElementById('hero3d');
+    if (el) el.classList.add('is-ready');
+  });
 
-    let t0 = performance.now();
-    function frame(now) {
-      const t = (now - t0) / 1000;
-      ctx.clearRect(0, 0, W, H);
-
-      for (const b of blobs) {
-        b.x += b.vx;
-        b.y += b.vy;
-        if (b.x < 0.05 || b.x > 0.95) b.vx *= -1;
-        if (b.y < 0.05 || b.y > 0.95) b.vy *= -1;
-        const cx = b.x * W + Math.cos(t*0.4 + b.phase) * 40;
-        const cy = b.y * H + Math.sin(t*0.3 + b.phase) * 40;
-        const r  = b.r * Math.min(W, H);
-        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-        g.addColorStop(0, `hsla(${b.hue}, ${b.sat}%, ${b.l}%, 0.55)`);
-        g.addColorStop(0.5, `hsla(${b.hue}, ${b.sat}%, ${b.l}%, 0.18)`);
-        g.addColorStop(1, `hsla(${b.hue}, ${b.sat}%, ${b.l}%, 0)`);
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, W, H);
+  // ---------- SCENE STEPS HIGHLIGHT ----------
+  // Map progress [0..1] to one of 4 steps. Steps roughly cover:
+  //   0.00–0.25  → Knot
+  //   0.25–0.50  → Torus
+  //   0.50–0.75  → Sphere
+  //   0.75–1.00  → Particles
+  const steps = document.querySelectorAll('#sceneSteps li');
+  if (steps.length) {
+    const setActive = (i) => steps.forEach((s, idx) => s.classList.toggle('is-active', idx === i));
+    setActive(0);
+    if (window.ScrollTrigger) {
+      for (let i = 0; i < 4; i++) {
+        const start = `${10 + i * 20}%`;
+        const end   = `${30 + i * 20}%`;
+        ScrollTrigger.create({
+          trigger: '#scene',
+          start: `top+=${start} center`,
+          end:   `top+=${end} center`,
+          onEnter:    () => setActive(i),
+          onEnterBack:() => setActive(i),
+        });
       }
-
-      requestAnimationFrame(frame);
     }
-    requestAnimationFrame(frame);
   }
 
   // ---------- RENDER PROJECTS ----------
