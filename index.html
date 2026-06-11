@@ -16,6 +16,11 @@
   <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><polygon points='12,3 22,21 2,21' fill='none' stroke='%230A0A0A' stroke-width='2'/></svg>" />
 </head>
 <body>
+  <!-- Custom cursor (desktop, fine pointer only) -->
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor__ring" aria-hidden="true"></div>
+  <!-- Film-grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
   <!-- ========================================================
        NAV — fixed, with scroll-progress bar
        ======================================================== -->
@@ -377,7 +382,7 @@
   </main>
 
   <script src="./projects.js"></script>
-  <script src="./marquee.js"></script>
   <script src="./app.js"></script>
+  <script src="./motion.js"></script>
 </body>
 </html>

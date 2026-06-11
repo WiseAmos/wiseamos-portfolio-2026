@@ -107,6 +107,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   inset: 0;
   background: var(--accent);
   z-index: -1;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 700ms cubic-bezier(.7,0,.3,1);
+}
+/* When the parent is revealed, wipe the lime block in from the left. */
+.h-display .fill-accent.is-in::before,
+.h2 .fill-accent.is-in::before,
+.cta__line .fill-accent.is-in::before,
+[data-reveal].is-in .fill-accent::before,
+.is-in .fill-accent::before {
+  transform: scaleX(1);
 }
 .h-display .fill-hot    { background: var(--hot);    color: var(--paper); padding: 0 0.08em; }
 .h-display .stroke-ink  { -webkit-text-stroke: 2px var(--ink); color: transparent; }
@@ -270,6 +281,14 @@ main { padding-top: 60px; } /* nav clearance */
 }
 .hero__line {
   display: block; /* forces BUILDER / OF / SYSTEMS. onto three lines, no <br/> needed */
+  /* Line-by-line reveal on page load. JS adds .is-in after a small delay. */
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 700ms cubic-bezier(.2,.7,.2,1), transform 700ms cubic-bezier(.2,.7,.2,1);
+}
+.hero__line.is-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero__sub {
@@ -385,10 +404,46 @@ main { padding-top: 60px; } /* nav clearance */
   overflow: hidden;
   height: 100%; /* equalize heights within a row */
   transition: transform 200ms cubic-bezier(.2,.7,.2,1), box-shadow 200ms ease;
+  /* Stagger-in default: cards start hidden, then reveal in sequence via JS */
+  opacity: 0;
+  transform: translateY(28px);
+}
+.card.is-in {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 600ms cubic-bezier(.2,.7,.2,1),
+    transform 600ms cubic-bezier(.2,.7,.2,1),
+    box-shadow 200ms ease;
 }
 .card:hover {
   transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--ink);
+}
+/* Hover: glyph pattern drifts up subtly */
+.card:hover .card__glyph-pattern {
+  transform: translateY(-4px);
+  transition: transform 400ms cubic-bezier(.2,.7,.2,1);
+}
+.card__glyph-pattern {
+  /* Add transition for the drift. Original .card__glyph-pattern block above
+     already sets opacity/inset. We append the transform transition. */
+  transition: transform 400ms cubic-bezier(.2,.7,.2,1);
+}
+/* Hover: lime wash sweep across the card from bottom-left.
+   Implemented with a ::after on the card itself. */
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, color-mix(in srgb, var(--accent) 22%, transparent) 60%, var(--accent) 100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 320ms ease;
+  z-index: 1;
+}
+.card:hover::after {
+  opacity: 1;
 }
 
 /* GLYPH SLOT — left column, 4:3-ish aspect, project-specific mark */
@@ -403,6 +458,7 @@ main { padding-top: 60px; } /* nav clearance */
   overflow: hidden;
   color: var(--ink);
   background: color-mix(in srgb, var(--lang-color, var(--ink)) 12%, var(--paper));
+  z-index: 2; /* sit above the hover wash */
 }
 .card__glyph-pattern {
   position: absolute;
@@ -504,6 +560,8 @@ main { padding-top: 60px; } /* nav clearance */
   flex-direction: column;
   gap: 6px; /* tight — title feels attached to the head, not floating mid-card */
   min-width: 0; /* prevent grid blowout on long words */
+  position: relative;
+  z-index: 2; /* sit above the hover wash */
 }
 /* HEAD — single thin row of meta above the title, no border/fill. */
 .card__head {
@@ -648,6 +706,16 @@ main { padding-top: 60px; } /* nav clearance */
   grid-template-columns: clamp(60px, 7vw, 140px) 1fr;
   column-gap: clamp(20px, 2.5vw, 40px);
   align-items: start;
+  /* Stagger-in default */
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 540ms cubic-bezier(.2,.7,.2,1),
+    transform 540ms cubic-bezier(.2,.7,.2,1);
+}
+.timeline__step.is-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 .timeline__step:last-child { border-bottom: 1px solid var(--ink); }
 .timeline__step:first-child { border-top: 0; padding-top: 0; }
@@ -735,6 +803,14 @@ main { padding-top: 60px; } /* nav clearance */
 }
 .timeline__bullets li {
   padding: 4px 0;
+  /* Stagger-in: each bullet fades in, JS adds .is-in */
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 360ms ease, transform 360ms ease;
+}
+.timeline__step.is-in .timeline__bullets li.is-in {
+  opacity: 1;
+  transform: translateX(0);
 }
 .timeline__bullets li::before {
   content: '— ';
@@ -943,6 +1019,14 @@ main { padding-top: 60px; } /* nav clearance */
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
+  /* Show everything immediately, no entrance states. */
+  .card, .timeline__step, .timeline__bullets li,
+  .hero__line {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  /* Lime block fully painted, no wipe. */
+  .fill-accent::before { transform: scaleX(1) !important; }
 }
 
 /* -------- MOBILE -------- */
@@ -1017,4 +1101,63 @@ main { padding-top: 60px; } /* nav clearance */
   /* Footer */
   .footer { grid-template-columns: 1fr; gap: 8px; text-align: left; }
   .footer > div:nth-child(2), .footer > div:nth-child(3) { text-align: left; }
+}
+
+/* -------- CUSTOM CURSOR (desktop only) --------
+   Hidden by default. .has-cursor is added to <html> by JS when a fine
+   pointer is detected (e.g. mouse, not touch). */
+html.has-cursor { cursor: none; }
+html.has-cursor a, html.has-cursor button, html.has-cursor [role="button"],
+html.has-cursor input, html.has-cursor textarea, html.has-cursor select,
+html.has-cursor label, html.has-cursor [data-cursor="hover"] { cursor: none; }
+.cursor,
+.cursor__ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate3d(-100px, -100px, 0);
+  will-change: transform;
+  border-radius: 50%;
+  mix-blend-mode: difference;
+}
+.cursor {
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  transition: width 180ms ease, height 180ms ease, background 180ms ease;
+}
+.cursor__ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--accent);
+  margin: -13px 0 0 -13px; /* center on the dot */
+  transition: width 200ms ease, height 200ms ease, border-color 200ms ease, opacity 200ms ease;
+  opacity: 0.6;
+}
+/* When hovering an interactive element: grow the ring, hide the dot. */
+html.has-cursor.is-hovering .cursor { width: 0; height: 0; }
+html.has-cursor.is-hovering .cursor__ring { width: 52px; height: 52px; margin: -20px 0 0 -20px; opacity: 1; }
+/* Hide on touch / reduced motion / mobile */
+@media (hover: none), (max-width: 900px), (prefers-reduced-motion: reduce) {
+  .cursor, .cursor__ring { display: none; }
+}
+
+/* -------- GRAIN / NOISE OVERLAY --------
+   Subtle film-grain texture that parallaxes against scroll. The SVG
+   is embedded as a data URI to avoid an extra HTTP request. */
+.grain {
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.85 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .grain { display: none; }
 }
