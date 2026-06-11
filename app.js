@@ -1,45 +1,85 @@
 // ============================================================
-// v4 — content-first. No 3D. No WebGL. No canvas.
-// All interactions are DOM/CSS, no animation library.
+// v5 — content-first + splash + 2-col card grid (work).
+// No 3D. No WebGL. No canvas. All interactions are DOM/CSS.
 // ============================================================
 
 (function () {
   'use strict';
 
   // ------------------------------------------------------------
-  // WORK TABLE — render curated projects as <tr> rows
-  // v4: single-line NO column (no wrap), LIVE DEMO column,
-  // row hover reveals stars + last-commit date.
+  // SPLASH — full-viewport overlay. Dismisses on
+  //   - 2.5s timeout (default)
+  //   - click anywhere
+  //   - scroll
+  //   - space / enter
+  // The element is removed from the DOM after the transition
+  // finishes (or after a 600ms hard cap) so it doesn't interfere
+  // with the page.
   // ------------------------------------------------------------
-  const tbody = document.querySelector('#workTable tbody');
-  if (tbody && window.PROJECTS) {
+  (function splash() {
+    const el = document.getElementById('splash');
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.remove();
+      return;
+    }
+    let dismissed = false;
+    function dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      el.classList.add('splash--out');
+      setTimeout(() => el.remove(), 600);
+    }
+    // Dismiss on first interaction
+    const opts = { once: true, passive: true };
+    window.addEventListener('scroll', dismiss, opts);
+    window.addEventListener('click', dismiss, opts);
+    window.addEventListener('keydown', dismiss, opts);
+    // Auto-dismiss after 2.5s
+    setTimeout(dismiss, 2500);
+  })();
+
+  // ------------------------------------------------------------
+  // WORK CARDS — render curated projects as <li> cards in a
+  // 2-col grid (desktop) / 1-col (mobile). Each card has a
+  // glyph slot (project-specific typographic mark + pattern)
+  // and a meta column. v5 replaces the v4 table.
+  // ------------------------------------------------------------
+  const grid = document.querySelector('#workGrid');
+  if (grid && window.PROJECTS) {
     const gh = 'https://github.com/WiseAmos';
     const total = String(window.PROJECTS.length).padStart(2, '0');
-    tbody.innerHTML = window.PROJECTS.map((p, i) => {
+    grid.innerHTML = window.PROJECTS.map((p, i) => {
       const num = String(i + 1).padStart(2, '0');
-      const topics = (p.topics || []).slice(0, 3).map(t => `<span>${t}</span>`).join('');
-      const demoCell = p.liveDemo
-        ? `<a class="work__link work__link--accent" href="${p.liveDemo}" target="_blank" rel="noopener">LIVE <span aria-hidden="true">↗</span></a>`
-        : `<span class="work__link work__link--mute">—</span>`;
+      const topics = (p.topics || []).slice(0, 3).map(t => `<span class="tag">#${t}</span>`).join(' ');
+      const g = p.glyph || { mark: '··', accent: '', pattern: 'dots' };
+      const demoLink = p.liveDemo
+        ? `<a class="card__btn card__btn--live" href="${p.liveDemo}" target="_blank" rel="noopener">LIVE <span aria-hidden="true">↗</span></a>`
+        : '';
+      const repoLink = `<a class="card__btn card__btn--repo" href="${gh}/${p.repo}" target="_blank" rel="noopener">REPO <span aria-hidden="true">↗</span></a>`;
       return `
-        <tr>
-          <td class="col-no"><span class="col-no__num">${num}</span><span class="col-no__sep">/</span><span class="col-no__total">${total}</span></td>
-          <td class="col-name">
-            <span class="col-name__title">${p.title}</span>
-            <span class="sub">${p.tag || ''}</span>
-          </td>
-          <td class="col-lang">
-            <span class="lang-tag" style="--lang-color:${p.langColor || '#0A0A0A'}">${p.lang || '—'}</span>
-          </td>
-          <td class="col-desc">${p.desc || ''}</td>
-          <td class="col-topics">${topics}</td>
-          <td class="col-demo">${demoCell}</td>
-          <td class="col-link">
-            <a class="work__link" href="${gh}/${p.repo}" target="_blank" rel="noopener">
-              REPO <span aria-hidden="true">↗</span>
-            </a>
-          </td>
-        </tr>
+        <li class="card" data-pattern="${g.pattern}">
+          <div class="card__glyph" style="--lang-color:${p.langColor || '#0A0A0A'}">
+            <span class="card__glyph-pattern" aria-hidden="true"></span>
+            <span class="card__glyph-mark">${g.mark}</span>
+            ${g.accent ? `<span class="card__glyph-accent" aria-hidden="true">${g.accent}</span>` : ''}
+          </div>
+          <div class="card__body">
+            <div class="card__head">
+              <span class="card__no">${num} / ${total}</span>
+              <span class="card__lang" style="--lang-color:${p.langColor || '#0A0A0A'}">${p.lang || '—'}</span>
+            </div>
+            <h3 class="card__title">${p.title}</h3>
+            <p class="card__desc">${p.desc || ''}</p>
+            <div class="card__foot">
+              <div class="card__tags">${topics}</div>
+              <div class="card__ctas">
+                ${demoLink}
+                ${repoLink}
+              </div>
+            </div>
+          </div>
+        </li>
       `;
     }).join('');
   }

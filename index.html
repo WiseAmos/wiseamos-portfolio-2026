@@ -40,6 +40,23 @@
     </a>
   </header>
 
+  <!-- ========================================================
+       SPLASH — full-viewport overlay, dismisses on
+       scroll / click / space / 2.5s timeout. Native palette
+       (paper / ink / lime) so it reads as part of the site.
+       ======================================================== -->
+  <div class="splash" id="splash" role="status" aria-label="Loading">
+    <div class="splash__inner">
+      <svg class="splash__mark" viewBox="0 0 80 80" width="80" height="80" aria-hidden="true">
+        <polygon points="40,8 76,68 4,68" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+      <div class="splash__word">AMOS</div>
+      <div class="splash__meta">engineer &middot; singapore &middot; available</div>
+      <div class="splash__rule"></div>
+      <div class="splash__prompt">SCROLL TO ENTER &darr;</div>
+    </div>
+  </div>
+
   <main id="top">
 
     <!-- ========================================================
@@ -120,8 +137,9 @@
     </section>
 
     <!-- ========================================================
-         WORK — table (not card grid). 7 columns:
-         NO. | NAME | LANG | DESCRIPTION | TOPICS | DEMO | REPO
+         WORK — magazine-style 2-col card grid (desktop) /
+         1-col (mobile). Each card has a glyph slot (project-
+         specific typographic mark) and a meta column.
          ======================================================== -->
     <section id="work" class="work" data-reveal>
       <header class="work__head">
@@ -130,22 +148,7 @@
         <span class="count"><b>09</b> ITEMS</span>
       </header>
 
-      <div class="work__tablewrap">
-        <table class="work-table" id="workTable">
-          <thead>
-            <tr>
-              <th class="col-no">NO.</th>
-              <th>NAME</th>
-              <th class="col-lang">LANG</th>
-              <th class="col-desc-head">DESCRIPTION</th>
-              <th class="col-topics-head">TOPICS</th>
-              <th class="col-demo-head">DEMO</th>
-              <th class="col-link">REPO</th>
-            </tr>
-          </thead>
-          <tbody><!-- rows injected by app.js from window.PROJECTS --></tbody>
-        </table>
-      </div>
+      <ol class="work-grid" id="workGrid"><!-- cards injected by app.js from window.PROJECTS --></ol>
 
       <a class="pill pill--ghost work__more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
         <span class="pill__label">SEE ALL 72 REPOS</span>

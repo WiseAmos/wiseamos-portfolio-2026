@@ -1,8 +1,14 @@
-// Curated projects. Rendered as hard table rows in app.js.
-// lang = short code (PY, TS, RS, GO, SOL, JS, C++) shown in the LANG column.
+// Curated projects. Rendered as cards in app.js.
+// lang = short code (PY, TS, RS, GO, SOL, JS, C++) shown on the card.
 // langColor = solid color of the language swatch.
-// liveDemo = optional URL to a deployed demo (rendered as DEMO column link).
-// stars = number of github stars (shown on row hover for credibility).
+// liveDemo = optional URL to a deployed demo (rendered as LIVE link).
+// stars = number of github stars (shown on card hover for credibility).
+// glyph = the big typographic mark in the card's glyph slot.
+//         shape: { mark: 'string', accent: 'string', pattern: 'string' }
+//           mark: 1-3 chars shown huge in the card (e.g. 'FL', 'BTC')
+//           accent: optional small accent char layered (e.g. '✦', '●')
+//           pattern: 'grid' | 'bars' | 'rings' | 'cross' | 'dots' | 'lines' | 'frame' | 'stack'
+//                    — the background pattern for the glyph slot
 window.PROJECTS = [
   {
     repo: "face-lock",
@@ -14,6 +20,7 @@ window.PROJECTS = [
     topics: ["python", "opencv", "cli"],
     liveDemo: "https://face-lock.site",
     stars: 320,
+    glyph: { mark: "FL", accent: "●", pattern: "rings" },
   },
   {
     repo: "face-lock-site",
@@ -25,6 +32,7 @@ window.PROJECTS = [
     topics: ["typescript", "marketing"],
     liveDemo: "https://face-lock.site",
     stars: 4,
+    glyph: { mark: "fl.", accent: "↗", pattern: "grid" },
   },
   {
     repo: "shoppingshield",
@@ -36,6 +44,7 @@ window.PROJECTS = [
     topics: ["typescript", "security"],
     liveDemo: null,
     stars: 47,
+    glyph: { mark: "SS", accent: "▲", pattern: "frame" },
   },
   {
     repo: "btc-perp-hft-framework",
@@ -47,6 +56,7 @@ window.PROJECTS = [
     topics: ["python", "trading", "low-latency"],
     liveDemo: null,
     stars: 89,
+    glyph: { mark: "₿", accent: "↗", pattern: "bars" },
   },
   {
     repo: "Agentic-Rescue-Drone",
@@ -58,6 +68,7 @@ window.PROJECTS = [
     topics: ["python", "ros", "cv"],
     liveDemo: null,
     stars: 156,
+    glyph: { mark: "ARD", accent: "+", pattern: "cross" },
   },
   {
     repo: "AI-debate-researcher",
@@ -69,6 +80,7 @@ window.PROJECTS = [
     topics: ["python", "llm", "agents"],
     liveDemo: null,
     stars: 41,
+    glyph: { mark: "?!", accent: "↔", pattern: "dots" },
   },
   {
     repo: "CodeColosseum",
@@ -80,6 +92,7 @@ window.PROJECTS = [
     topics: ["typescript"],
     liveDemo: "https://codecolosseum.com",
     stars: 12,
+    glyph: { mark: "{ }", accent: "▷", pattern: "lines" },
   },
   {
     repo: "dateonlinkedin",
@@ -91,6 +104,7 @@ window.PROJECTS = [
     topics: ["typescript"],
     liveDemo: null,
     stars: 8,
+    glyph: { mark: "in", accent: "♥", pattern: "frame" },
   },
   {
     repo: "postal_code_visualizer",
@@ -102,5 +116,6 @@ window.PROJECTS = [
     topics: ["typescript", "data-viz"],
     liveDemo: "https://postal-code-visualizer.vercel.app",
     stars: 6,
+    glyph: { mark: "SG", accent: "▦", pattern: "grid" },
   },
 ];
