@@ -658,7 +658,7 @@ main { padding-top: 60px; } /* nav clearance */
   letter-spacing: -0.04em;
   display: block;
   text-align: right;
-  padding-right: 24px;
+  padding-right: 36px; /* a bit more breathing room between the number's right edge and the rail */
   position: relative;
   z-index: 2;
   transition: color 200ms ease;
