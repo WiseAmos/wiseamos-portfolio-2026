@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Amos — Builder. Systems. Software.</title>
+  <meta name="description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
+  <meta property="og:title" content="Amos — Builder. Systems. Software." />
+  <meta property="og:description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
+  <meta name="theme-color" content="#0A0A0F" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- GRAIN OVERLAY -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- CURSOR GLOW -->
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <header class="nav">
+    <a href="#top" class="nav__logo" aria-label="Home">
+      <span class="logo-mark">▲</span> amos
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#stack">Stack</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="nav__cta" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+      GitHub <span aria-hidden="true">↗</span>
+    </a>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" data-reveal>
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__inner">
+        <div class="eyebrow">
+          <span class="dot"></span> AVAILABLE FOR SELECT WORK · 2026
+        </div>
+        <h1 class="hero__title">
+          <span class="line"><span>Builder of</span></span>
+          <span class="line"><span>systems that</span></span>
+          <span class="line"><span class="accent">trade, fly, <em>and</em> scale.</span></span>
+        </h1>
+        <p class="hero__sub">
+          I'm <strong>Amos</strong> — an engineer obsessed with building things that move fast and ship faster.
+          Autonomous drones, HFT frameworks, full-stack products, and the occasional
+          <span class="inline-pill">side quest</span>.
+        </p>
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#work">
+            See selected work <span aria-hidden="true">↓</span>
+          </a>
+          <a class="btn btn--ghost" href="#contact">
+            Get in touch
+          </a>
+        </div>
+        <div class="hero__meta">
+          <div><span>SINGAPORE · SG</span><span>UTC+8</span></div>
+          <div><span>72+ REPOS</span><span>on github</span></div>
+          <div><span>SHIP FAST.</span><span>iterate faster.</span></div>
+        </div>
+      </div>
+      <div class="hero__scroll" aria-hidden="true">
+        <span>scroll</span><span class="bar"></span>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>AUTONOMOUS DRONES</span><span class="dot">●</span>
+        <span>HIGH-FREQUENCY TRADING</span><span class="dot">●</span>
+        <span>FULL-STACK PRODUCTS</span><span class="dot">●</span>
+        <span>MULTI-AGENT LLM SYSTEMS</span><span class="dot">●</span>
+        <span>REAL-TIME WEB</span><span class="dot">●</span>
+        <span>AUTONOMOUS DRONES</span><span class="dot">●</span>
+        <span>HIGH-FREQUENCY TRADING</span><span class="dot">●</span>
+        <span>FULL-STACK PRODUCTS</span><span class="dot">●</span>
+        <span>MULTI-AGENT LLM SYSTEMS</span><span class="dot">●</span>
+        <span>REAL-TIME WEB</span><span class="dot">●</span>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section id="work" class="section section--work" data-reveal>
+      <header class="section__head">
+        <span class="eyebrow"><span class="dot"></span> 01 — SELECTED WORK</span>
+        <h2 class="section__title">
+          Nine things I built<br/>that actually shipped.
+        </h2>
+        <p class="section__lede">
+          A mix of infrastructure, consumer products, and the kind of weekend experiments that
+          accidentally become real. Click any card for the repo.
+        </p>
+      </header>
+
+      <ol class="work-grid" id="workGrid"><!-- injected --></ol>
+
+      <a class="btn btn--ghost work-more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
+        See all 72 repos on GitHub <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section section--about" data-reveal>
+      <div class="about__grid">
+        <div class="about__left">
+          <span class="eyebrow"><span class="dot"></span> 02 — ABOUT</span>
+          <h2 class="section__title">
+            I like<br/>hard problems<br/>
+            with real&nbsp;ramifications.
+          </h2>
+        </div>
+        <div class="about__right">
+          <p>
+            I build software that has to <em>work</em> — not just look good in a demo.
+            A lot of what I do sits at the intersection of <strong>infrastructure</strong> and
+            <strong>product</strong>: HFT engines on Coinbase, an autonomous rescue drone, full-stack
+            tools for scam protection, multi-agent research systems.
+          </p>
+          <p>
+            Outside of code I read too much, argue about markets, and ship side projects at
+            unreasonable hours. Currently exploring autonomous systems, real-time data
+            pipelines, and the open edges of <strong>agentic AI</strong>.
+          </p>
+          <ul class="about__chips">
+            <li>systems thinking</li>
+            <li>shipping > perfect</li>
+            <li>autonomy &amp; agents</li>
+            <li>real-time data</li>
+            <li>low-latency C++/Rust</li>
+            <li>full-stack TypeScript</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section id="stack" class="section section--stack" data-reveal>
+      <header class="section__head">
+        <span class="eyebrow"><span class="dot"></span> 03 — STACK</span>
+        <h2 class="section__title">
+          Tools I reach for.
+        </h2>
+      </header>
+      <div class="stack-grid">
+        <div class="stack-col">
+          <h3>Languages</h3>
+          <ul>
+            <li>TypeScript</li>
+            <li>Python</li>
+            <li>C++ / Rust</li>
+            <li>SQL</li>
+            <li>Go (learning)</li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>Infra</h3>
+          <ul>
+            <li>AWS · GCP</li>
+            <li>Docker · K8s</li>
+            <li>Postgres · Redis</li>
+            <li>Kafka · NATS</li>
+            <li>Vercel · Cloudflare</li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>Frontend</h3>
+          <ul>
+            <li>Next.js · React</li>
+            <li>Three.js · WebGL</li>
+            <li>Tailwind · CSS</li>
+            <li>GSAP · Framer</li>
+            <li>Figma → code</li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>ML / AI</h3>
+          <ul>
+            <li>PyTorch</li>
+            <li>LangChain · DSPy</li>
+            <li>HuggingFace</li>
+            <li>Vector DBs</li>
+            <li>Computer Vision</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / CTA -->
+    <section id="contact" class="section section--cta" data-reveal>
+      <h2 class="cta__title">
+        Have something<br/>
+        <span class="accent">interesting</span> to build?
+      </h2>
+      <p class="cta__sub">
+        Open to select freelance work, full-time roles, and collaboration on
+        autonomous systems, fintech infra, and ambitious product builds.
+      </p>
+      <div class="cta__buttons">
+        <a class="btn btn--primary big" href="mailto:project99sp@gmail.com">
+          project99sp@gmail.com <span aria-hidden="true">↗</span>
+        </a>
+        <a class="btn btn--ghost big" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+          GitHub
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__row">
+      <span>© 2026 Amos</span>
+      <span>Built in Singapore</span>
+      <span>Last deploy: <span id="deployStamp">just now</span></span>
+    </div>
+  </footer>
+
+  <!-- GSAP for scroll reveals -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="./projects.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "wiseamos-portfolio-2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal portfolio for Amos — built with hand-rolled HTML/CSS/JS, deployed on Vercel.",
+  "scripts": {
+    "dev": "npx --yes serve@14 -l 3000 .",
+    "start": "npx --yes serve@14 -l 3000 ."
+  }
+}
