@@ -15,6 +15,30 @@ npm run dev
 - `styles.css` — design system + layout
 - `app.js` — interactions (hero canvas, cursor glow, scroll reveals)
 - `projects.js` — curated list of repos featured on the page
+- `three-hero.js` / `three-scene.js` — Three.js scenes (hero + scroll-pinned morph)
+- `capture.py` — record video + stills of the deployed site (Playwright + ffmpeg)
+- `deploy-and-capture.sh` — commit → deploy → record in one shot
+
+## Capture (record video of the site)
+
+```bash
+# Record a full scroll-through, desktop + mobile
+python3 capture.py --out captures/run-01
+
+# Stills only, faster
+python3 capture.py --no-video --out captures/stills
+
+# Custom: 8s scroll, 24fps, 16 analysis frames
+python3 capture.py --scroll-duration 8 --fps 24 --frames 16
+
+# End-to-end: commit + deploy + record
+bash deploy-and-capture.sh
+```
+
+Each run produces `desktop.webm` + `mobile.webm` (scroll-through videos at the
+target viewport), 4 stills per viewport (top, bottom, scene@25%, scene@75%),
+and N evenly-spaced PNG frames extracted for vision analysis. Output goes to
+`captures/run-<timestamp>/` (gitignored).
 
 ## Deploy
 
