@@ -7,31 +7,41 @@
   <meta name="description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
   <meta property="og:title" content="Amos — Builder. Systems. Software." />
   <meta property="og:description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
-  <meta name="theme-color" content="#0A0A0F" />
+  <meta name="theme-color" content="#07070B" />
 
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <!-- GRAIN OVERLAY -->
-  <div class="grain" aria-hidden="true"></div>
+  <!-- BACKGROUND SCANLINES (subtle) -->
+  <div class="scanlines" aria-hidden="true"></div>
 
-  <!-- CURSOR GLOW -->
+  <!-- INTRO SPLASH (Phase B) -->
+  <div id="intro" class="intro" aria-hidden="true">
+    <div class="intro__inner">
+      <svg class="intro__mark" viewBox="0 0 80 80" width="80" height="80">
+        <polygon points="40,12 72,68 8,68" fill="none" stroke="#B6FF6B" stroke-width="3" stroke-linejoin="round"/>
+      </svg>
+      <div class="intro__wordmark">A·K</div>
+      <div class="intro__hint"><span>SCROLL TO BEGIN</span><span class="bar"></span></div>
+    </div>
+  </div>
+
+  <!-- CURSOR GLOW (subtle, desktop only) -->
   <div class="cursor-glow" aria-hidden="true"></div>
 
-  <!-- HERO 3D (Three.js) -->
-  <div id="hero3d" class="hero3d" aria-hidden="true"></div>
-  <div id="hero3d-fallback" class="hero3d-fallback" aria-hidden="true"></div>
-
   <!-- NAV -->
-  <header class="nav">
+  <header class="nav" id="nav">
     <a href="#top" class="nav__logo" aria-label="Home">
-      <span class="logo-mark">▲</span> amos
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><polygon points="12,3 22,21 2,21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="logo-text">amos</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
       <a href="#work">Work</a>
@@ -39,34 +49,36 @@
       <a href="#stack">Stack</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a class="nav__cta" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
-      GitHub <span aria-hidden="true">↗</span>
+    <a class="pill pill--holo nav__cta" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+      <span class="pill__label">GitHub</span>
+      <span class="pill__icon" aria-hidden="true">↗</span>
     </a>
   </header>
 
   <main id="top">
-    <!-- HERO -->
+    <!-- HERO: 3D card carousel -->
     <section class="hero" data-reveal>
       <div class="hero__inner">
         <div class="eyebrow">
           <span class="dot"></span> AVAILABLE FOR SELECT WORK · 2026
         </div>
         <h1 class="hero__title">
-          <span class="line"><span>Builder of</span></span>
-          <span class="line"><span>systems that</span></span>
+          <span class="line">Builder of</span>
+          <span class="line">systems that</span>
           <span class="line"><span class="accent">trade, fly, <em>and</em> scale.</span></span>
         </h1>
         <p class="hero__sub">
-          I'm <strong>Amos</strong> — an engineer obsessed with building things that move fast and ship faster.
-          Autonomous drones, HFT frameworks, full-stack products, and the occasional
-          <span class="inline-pill">side quest</span>.
+          I'm <strong>Amos</strong> — an engineer obsessed with things that have to actually
+          <em>work</em>. Autonomous drones, HFT frameworks, full-stack products, and the
+          occasional <span class="inline-pill">side quest</span>.
         </p>
         <div class="hero__cta">
-          <a class="btn btn--primary" href="#work">
-            See selected work <span aria-hidden="true">↓</span>
+          <a class="pill pill--holo pill--big" href="#work">
+            <span class="pill__label">See selected work</span>
+            <span class="pill__icon" aria-hidden="true">↓</span>
           </a>
-          <a class="btn btn--ghost" href="#contact">
-            Get in touch
+          <a class="pill pill--ghost pill--big" href="#contact">
+            <span class="pill__label">Get in touch</span>
           </a>
         </div>
         <div class="hero__meta">
@@ -75,24 +87,59 @@
           <div><span>SHIP FAST.</span><span>iterate faster.</span></div>
         </div>
       </div>
+
+      <!-- 3D card carousel (mobile: horizontal scroll-snap, no WebGL) -->
+      <div class="hero__stage" id="heroStage" aria-label="Featured projects carousel">
+        <div class="hero__cards" id="heroCards">
+          <!-- Cards injected by three-hero.js, fallbacks for no-WebGL/no-JS injected by app.js -->
+        </div>
+        <div class="hero__hint" aria-hidden="true">DRAG TO EXPLORE</div>
+        <ol class="hero__dots" id="heroDots" aria-hidden="true"></ol>
+      </div>
+      <div class="hero__fallback" id="heroFallback" aria-hidden="true"></div>
+
       <div class="hero__scroll" aria-hidden="true">
         <span>scroll</span><span class="bar"></span>
       </div>
     </section>
 
-    <!-- MARQUEE -->
+    <!-- GIANT AMOS MARQUEE (Phase D) -->
     <section class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <span>AUTONOMOUS DRONES</span><span class="dot">●</span>
-        <span>HIGH-FREQUENCY TRADING</span><span class="dot">●</span>
-        <span>FULL-STACK PRODUCTS</span><span class="dot">●</span>
-        <span>MULTI-AGENT LLM SYSTEMS</span><span class="dot">●</span>
-        <span>REAL-TIME WEB</span><span class="dot">●</span>
-        <span>AUTONOMOUS DRONES</span><span class="dot">●</span>
-        <span>HIGH-FREQUENCY TRADING</span><span class="dot">●</span>
-        <span>FULL-STACK PRODUCTS</span><span class="dot">●</span>
-        <span>MULTI-AGENT LLM SYSTEMS</span><span class="dot">●</span>
-        <span>REAL-TIME WEB</span><span class="dot">●</span>
+      <div class="marquee__row marquee__row--1" data-speed="0.18">
+        <div class="marquee__inner">
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span>SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span>SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
+        </div>
+      </div>
+      <div class="marquee__row marquee__row--2" data-speed="0.42">
+        <div class="marquee__inner">
+          <span class="big">AMOS</span>
+          <span class="big">AMOS</span>
+          <span class="big">AMOS</span>
+          <span class="big">AMOS</span>
+          <span class="big">AMOS</span>
+          <span class="big">AMOS</span>
+        </div>
+      </div>
+      <div class="marquee__row marquee__row--3" data-speed="0.24">
+        <div class="marquee__inner">
+          <span>DRONES</span><span class="dot">◆</span>
+          <span>TRADING</span><span class="dot">◆</span>
+          <span>WEB</span><span class="dot">◆</span>
+          <span>3D</span><span class="dot">◆</span>
+          <span>AGENTS</span><span class="dot">◆</span>
+          <span>DRONES</span><span class="dot">◆</span>
+          <span>TRADING</span><span class="dot">◆</span>
+          <span>WEB</span><span class="dot">◆</span>
+          <span>3D</span><span class="dot">◆</span>
+          <span>AGENTS</span><span class="dot">◆</span>
+        </div>
       </div>
     </section>
 
@@ -104,19 +151,20 @@
           Nine things I built<br/>that actually shipped.
         </h2>
         <p class="section__lede">
-          A mix of infrastructure, consumer products, and the kind of weekend experiments that
-          accidentally become real. Click any card for the repo.
+          A mix of infrastructure, consumer products, and the kind of weekend experiments
+          that accidentally become real. Click any card for the repo.
         </p>
       </header>
 
       <ol class="work-grid" id="workGrid"><!-- injected --></ol>
 
-      <a class="btn btn--ghost work-more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
-        See all 72 repos on GitHub <span aria-hidden="true">↗</span>
+      <a class="pill pill--ghost work-more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
+        <span class="pill__label">See all 72 repos on GitHub</span>
+        <span class="pill__icon" aria-hidden="true">↗</span>
       </a>
     </section>
 
-    <!-- SCROLL-PINNED 3D SCENE -->
+    <!-- SCROLL-PINNED 3D SCENE: shader-based morphing blob -->
     <!-- NOTE: do NOT put data-reveal on the outer .scene3d — its transform
          would break position: sticky inside. Reveal is on the inner copy. -->
     <section id="scene" class="scene3d">
@@ -125,19 +173,19 @@
         <div class="scene3d__copy" data-reveal>
           <span class="eyebrow"><span class="dot"></span> 01.5 — IN MOTION</span>
           <h2 class="section__title">
-            Geometry that<br/>
+            A shape that<br/>
             <span class="accent">replies</span> to scroll.
           </h2>
-          <p class="section__lede">
-            The same wireframe you saw in the hero — but as you scroll, it morphs,
-            fractures, and re-assembles. A small way of showing how I think about
-            stateful systems: they only make sense once you <em>drive</em> them.
+          <p class="section__lede" id="sceneLede">
+            The same surface you saw in the hero — but as you scroll, it morphs, displaces,
+            and re-assembles. A small way of showing how I think about stateful systems:
+            they only make sense once you <em>drive</em> them.
           </p>
           <ol class="scene3d__steps" id="sceneSteps">
-            <li data-step="0"><span>01</span> Knot</li>
-            <li data-step="1"><span>02</span> Torus</li>
-            <li data-step="2"><span>03</span> Sphere</li>
-            <li data-step="3"><span>04</span> Particles</li>
+            <li data-step="0" data-copy="Real-time stateful systems — inputs and outputs coupled, feedback tight."><span>01</span> Knot</li>
+            <li data-step="1" data-copy="Deterministic, predictable loops — bounded, observable, never surprising."><span>02</span> Torus</li>
+            <li data-step="2" data-copy="Structured, faceted decisions — many small surfaces, one coherent whole."><span>03</span> Sphere</li>
+            <li data-step="3" data-copy="Exploration at scale — many actors, one emerging pattern."><span>04</span> Particles</li>
           </ol>
         </div>
       </div>
@@ -157,8 +205,8 @@
           <p>
             I build software that has to <em>work</em> — not just look good in a demo.
             A lot of what I do sits at the intersection of <strong>infrastructure</strong> and
-            <strong>product</strong>: HFT engines on Coinbase, an autonomous rescue drone, full-stack
-            tools for scam protection, multi-agent research systems.
+            <strong>product</strong>: HFT engines on Coinbase, an autonomous rescue drone,
+            full-stack tools for scam protection, multi-agent research systems.
           </p>
           <p>
             Outside of code I read too much, argue about markets, and ship side projects at
@@ -167,7 +215,7 @@
           </p>
           <ul class="about__chips">
             <li>systems thinking</li>
-            <li>shipping > perfect</li>
+            <li>shipping &gt; perfect</li>
             <li>autonomy &amp; agents</li>
             <li>real-time data</li>
             <li>low-latency C++/Rust</li>
@@ -240,11 +288,13 @@
         autonomous systems, fintech infra, and ambitious product builds.
       </p>
       <div class="cta__buttons">
-        <a class="btn btn--primary big" href="mailto:project99sp@gmail.com">
-          project99sp@gmail.com <span aria-hidden="true">↗</span>
+        <a class="pill pill--holo pill--big" href="mailto:project99sp@gmail.com">
+          <span class="pill__label">project99sp@gmail.com</span>
+          <span class="pill__icon" aria-hidden="true">↗</span>
         </a>
-        <a class="btn btn--ghost big" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
-          GitHub
+        <a class="pill pill--ghost pill--big" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+          <span class="pill__label">GitHub</span>
+          <span class="pill__icon" aria-hidden="true">↗</span>
         </a>
       </div>
     </section>
@@ -272,6 +322,8 @@
   </script>
 
   <script src="./projects.js"></script>
+  <script src="./intro-splash.js"></script>
+  <script src="./marquee.js"></script>
   <script type="module" src="./three-hero.js"></script>
   <script type="module" src="./three-scene.js"></script>
   <script src="./app.js"></script>
