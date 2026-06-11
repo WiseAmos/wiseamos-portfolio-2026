@@ -1,58 +1,21 @@
 // ============================================================
-// GIANT MARQUEE
-// 3 rows of horizontally scrolling text. The middle row holds
-// the giant "AMOS" wordmark, alternating outline/fill. Rows
-// 1 and 3 are monospace taglines. Direction alternates.
-// Tied to viewport scroll (not time-based) for a physical feel.
+// MARQUEE — single row, scroll-tied
+// Moves with page scroll, not time. Hard ticks. No animation library.
 // ============================================================
 
 (function () {
-  const rows = document.querySelectorAll('.marquee__row');
-  if (!rows.length) return;
-
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) return; // static layout
-
-  let ticking = false;
-  let lastScrollY = window.scrollY;
-  // Each row has a data-speed multiplier
-  function update() {
-    const sy = window.scrollY;
-    const delta = sy - lastScrollY;
-    lastScrollY = sy;
-
-    rows.forEach((row) => {
-      const speed = parseFloat(row.dataset.speed || '0.2');
-      const inner = row.querySelector('.marquee__inner');
-      if (!inner) return;
-      // We track an offset per row
-      const current = parseFloat(inner.dataset.offset || '0');
-      // Direction: row 1 left, row 2 right, row 3 left
-      const direction = row.classList.contains('marquee__row--2') ? -1 : 1;
-      let next = current + delta * speed * direction;
-      // Wrap modulo width to keep numbers small and prevent drift
-      const w = inner.scrollWidth / 2; // doubled content for seamless loop
-      if (w > 0) {
-        next = ((next % w) + w) % w; // ensure positive
-        // Subtract one width so it's centered around 0
-        next = next - w;
-      }
-      inner.dataset.offset = String(next);
-      inner.style.transform = `translate3d(${next}px, 0, 0)`;
-    });
-
-    ticking = false;
-  }
-
-  function onScroll() {
-    if (!ticking) {
-      requestAnimationFrame(update);
-      ticking = true;
-    }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  // Initial pass
-  update();
+  const row = document.getElementById('marqueeRow');
+  if (!row) return;
+  // We translate row itself, not the inner. Inner is duplicated in HTML
+  // for a seamless wrap. We just slide left = positive scroll = row moves right? No.
+  // Convention: scroll DOWN (positive y delta) → row moves LEFT (negative translateX).
+  let lastY = window.scrollY;
+  let offset = 0;
+  addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const delta = y - lastY;
+    lastY = y;
+    offset -= delta * 0.45;  // 0.45x scroll speed
+    row.style.transform = `translate3d(${offset}px, 0, 0)`;
+  }, { passive: true });
 })();

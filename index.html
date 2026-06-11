@@ -3,326 +3,345 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Amos — Builder. Systems. Software.</title>
+  <title>AMOS — Builder. Systems. Software.</title>
   <meta name="description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
-  <meta property="og:title" content="Amos — Builder. Systems. Software." />
+  <meta property="og:title" content="AMOS — Builder. Systems. Software." />
   <meta property="og:description" content="Selected work by Amos — autonomous systems, trading infrastructure, full-stack products." />
-  <meta name="theme-color" content="#07070B" />
+  <meta name="theme-color" content="#F4F1EA" />
 
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <!-- BACKGROUND SCANLINES (subtle) -->
+  <!-- Subtle scanline texture (paper grain) -->
   <div class="scanlines" aria-hidden="true"></div>
-
-  <!-- INTRO SPLASH (Phase B) -->
-  <div id="intro" class="intro" aria-hidden="true">
-    <div class="intro__inner">
-      <svg class="intro__mark" viewBox="0 0 80 80" width="80" height="80">
-        <polygon points="40,12 72,68 8,68" fill="none" stroke="#B6FF6B" stroke-width="3" stroke-linejoin="round"/>
-      </svg>
-      <div class="intro__wordmark">A·K</div>
-      <div class="intro__hint"><span>SCROLL TO BEGIN</span><span class="bar"></span></div>
-    </div>
-  </div>
-
-  <!-- CURSOR GLOW (subtle, desktop only) -->
-  <div class="cursor-glow" aria-hidden="true"></div>
 
   <!-- NAV -->
   <header class="nav" id="nav">
     <a href="#top" class="nav__logo" aria-label="Home">
-      <span class="logo-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="22" height="22"><polygon points="12,3 22,21 2,21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-      </span>
-      <span class="logo-text">amos</span>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <polygon points="12,3 22,21 2,21" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <span>AMOS</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
-      <a href="#work">Work</a>
-      <a href="#about">About</a>
-      <a href="#stack">Stack</a>
-      <a href="#contact">Contact</a>
+      <a href="#work">WORK</a>
+      <a href="#scene">MOTION</a>
+      <a href="#about">ABOUT</a>
+      <a href="#stack">STACK</a>
+      <a href="#contact">CONTACT</a>
     </nav>
-    <a class="pill pill--holo nav__cta" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
-      <span class="pill__label">GitHub</span>
+    <a class="pill nav__cta" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+      <span class="pill__label">GITHUB</span>
       <span class="pill__icon" aria-hidden="true">↗</span>
     </a>
   </header>
 
   <main id="top">
-    <!-- HERO: 3D card carousel -->
+
+    <!-- ========================================================
+         HERO — typographic, asymmetric, single 3D geometry
+         ======================================================== -->
     <section class="hero" data-reveal>
-      <div class="hero__inner">
-        <div class="eyebrow">
-          <span class="dot"></span> AVAILABLE FOR SELECT WORK · 2026
+      <div class="hero__text">
+        <div>
+          <span class="eyebrow eyebrow--accent hero__eyebrow">AVAILABLE · 2026 · SINGAPORE</span>
+
+          <h1 class="h-display hero__title">
+            <span>BUILDER</span><br/>
+            <span>OF</span><br/>
+            <span class="fill-accent">SYSTEMS.</span>
+          </h1>
+
+          <p class="hero__sub">
+            <strong>AMOS</strong> &mdash; engineer. Autonomous drones, HFT frameworks, full-stack products.
+            I build things that have to <em>actually</em> work, then ship them.
+          </p>
+
+          <div class="hero__ctas">
+            <a class="pill pill--solid pill--big" href="#work">
+              <span class="pill__label">SEE SELECTED WORK</span>
+              <span class="pill__icon" aria-hidden="true">↓</span>
+            </a>
+            <a class="pill pill--ghost pill--big" href="#contact">
+              <span class="pill__label">GET IN TOUCH</span>
+            </a>
+          </div>
         </div>
-        <h1 class="hero__title">
-          <span class="line">Builder of</span>
-          <span class="line">systems that</span>
-          <span class="line"><span class="accent">trade, fly, <em>and</em> scale.</span></span>
-        </h1>
-        <p class="hero__sub">
-          I'm <strong>Amos</strong> — an engineer obsessed with things that have to actually
-          <em>work</em>. Autonomous drones, HFT frameworks, full-stack products, and the
-          occasional <span class="inline-pill">side quest</span>.
-        </p>
-        <div class="hero__cta">
-          <a class="pill pill--holo pill--big" href="#work">
-            <span class="pill__label">See selected work</span>
-            <span class="pill__icon" aria-hidden="true">↓</span>
-          </a>
-          <a class="pill pill--ghost pill--big" href="#contact">
-            <span class="pill__label">Get in touch</span>
-          </a>
-        </div>
+
         <div class="hero__meta">
-          <div><span>SINGAPORE · SG</span><span>UTC+8</span></div>
-          <div><span>72+ REPOS</span><span>on github</span></div>
-          <div><span>SHIP FAST.</span><span>iterate faster.</span></div>
+          <div><span>LOCATION</span><span>SG / UTC+8</span></div>
+          <div><span>REPOS</span><span>72+ GITHUB</span></div>
+          <div><span>POSTURE</span><span>SHIP FAST · ITERATE</span></div>
         </div>
       </div>
 
-      <!-- 3D card carousel (mobile: horizontal scroll-snap, no WebGL) -->
-      <div class="hero__stage" id="heroStage" aria-label="Featured projects carousel">
-        <div class="hero__cards" id="heroCards">
-          <!-- Cards injected by three-hero.js, fallbacks for no-WebGL/no-JS injected by app.js -->
-        </div>
-        <div class="hero__hint" aria-hidden="true">DRAG TO EXPLORE</div>
-        <ol class="hero__dots" id="heroDots" aria-hidden="true"></ol>
-      </div>
-      <div class="hero__fallback" id="heroFallback" aria-hidden="true"></div>
-
-      <div class="hero__scroll" aria-hidden="true">
-        <span>scroll</span><span class="bar"></span>
+      <div class="hero__stage" id="heroStage" aria-label="Geometry stage">
+        <span class="hero__stage-label">/ GEOMETRY · 01</span>
+        <span class="hero__stage-coord">
+          <b>SOLID.WIRE</b>
+          X: 0.00  Y: 0.00  Z: 0.00
+        </span>
+        <!-- canvas mounted by three-hero.js -->
       </div>
     </section>
 
-    <!-- GIANT AMOS MARQUEE (Phase D) -->
+    <!-- ========================================================
+         MARQUEE — single row, hard ticks, scroll-tied
+         ======================================================== -->
     <section class="marquee" aria-hidden="true">
-      <div class="marquee__row marquee__row--1" data-speed="0.18">
-        <div class="marquee__inner">
+      <div class="marquee__row" id="marqueeRow">
+        <div class="marquee__inner" id="marqueeInner">
           <span>BUILDS</span><span class="dot">◆</span>
-          <span>SHIPS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
           <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
           <span>REPEATS</span><span class="dot">◆</span>
           <span>BUILDS</span><span class="dot">◆</span>
-          <span>SHIPS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
           <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
           <span>REPEATS</span><span class="dot">◆</span>
-        </div>
-      </div>
-      <div class="marquee__row marquee__row--2" data-speed="0.42">
-        <div class="marquee__inner">
-          <span class="big">AMOS</span>
-          <span class="big">AMOS</span>
-          <span class="big">AMOS</span>
-          <span class="big">AMOS</span>
-          <span class="big">AMOS</span>
-          <span class="big">AMOS</span>
-        </div>
-      </div>
-      <div class="marquee__row marquee__row--3" data-speed="0.24">
-        <div class="marquee__inner">
-          <span>DRONES</span><span class="dot">◆</span>
-          <span>TRADING</span><span class="dot">◆</span>
-          <span>WEB</span><span class="dot">◆</span>
-          <span>3D</span><span class="dot">◆</span>
-          <span>AGENTS</span><span class="dot">◆</span>
-          <span>DRONES</span><span class="dot">◆</span>
-          <span>TRADING</span><span class="dot">◆</span>
-          <span>WEB</span><span class="dot">◆</span>
-          <span>3D</span><span class="dot">◆</span>
-          <span>AGENTS</span><span class="dot">◆</span>
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
+          <!-- duplicate set below for seamless wrap -->
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
+          <span>BUILDS</span><span class="dot">◆</span>
+          <span class="fill-accent">SHIPS</span><span class="dot">◆</span>
+          <span>ITERATES</span><span class="dot">◆</span>
+          <span>SCALES</span><span class="dot">◆</span>
+          <span>REPEATS</span><span class="dot">◆</span>
         </div>
       </div>
     </section>
 
-    <!-- WORK -->
-    <section id="work" class="section section--work" data-reveal>
-      <header class="section__head">
-        <span class="eyebrow"><span class="dot"></span> 01 — SELECTED WORK</span>
-        <h2 class="section__title">
-          Nine things I built<br/>that actually shipped.
-        </h2>
-        <p class="section__lede">
-          A mix of infrastructure, consumer products, and the kind of weekend experiments
-          that accidentally become real. Click any card for the repo.
-        </p>
+    <!-- ========================================================
+         WORK — table (not card grid)
+         ======================================================== -->
+    <section id="work" class="work" data-reveal>
+      <header class="work__head">
+        <span class="eyebrow">01 — SELECTED WORK</span>
+        <h2 class="h2">NINE THINGS<br/>THAT <span class="fill-accent">SHIPPED</span>.</h2>
+        <span class="count"><b>09</b> ITEMS</span>
       </header>
 
-      <ol class="work-grid" id="workGrid"><!-- injected --></ol>
+      <table class="work-table" id="workTable">
+        <thead>
+          <tr>
+            <th class="col-no">NO.</th>
+            <th>NAME</th>
+            <th class="col-lang">LANG</th>
+            <th class="col-desc-head">DESCRIPTION</th>
+            <th class="col-topics-head">TOPICS</th>
+            <th class="col-link">REPO</th>
+          </tr>
+        </thead>
+        <tbody><!-- rows injected by app.js from window.PROJECTS --></tbody>
+      </table>
 
-      <a class="pill pill--ghost work-more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
-        <span class="pill__label">See all 72 repos on GitHub</span>
+      <a class="pill pill--ghost work__more" href="https://github.com/WiseAmos?tab=repositories" target="_blank" rel="noopener">
+        <span class="pill__label">SEE ALL 72 REPOS</span>
         <span class="pill__icon" aria-hidden="true">↗</span>
       </a>
     </section>
 
-    <!-- SCROLL-PINNED 3D SCENE: shader-based morphing blob -->
-    <!-- NOTE: do NOT put data-reveal on the outer .scene3d — its transform
-         would break position: sticky inside. Reveal is on the inner copy. -->
-    <section id="scene" class="scene3d">
+    <!-- ========================================================
+         SCENE — sticky geometry + scrolling type
+         ======================================================== -->
+    <section id="scene" class="scene3d" data-reveal>
       <div class="scene3d__sticky">
-        <div class="scene3d__canvas" id="scene3d" aria-hidden="true"></div>
-        <div class="scene3d__copy" data-reveal>
-          <span class="eyebrow"><span class="dot"></span> 01.5 — IN MOTION</span>
-          <h2 class="section__title">
-            A shape that<br/>
-            <span class="accent">replies</span> to scroll.
-          </h2>
-          <p class="section__lede" id="sceneLede">
-            The same surface you saw in the hero — but as you scroll, it morphs, displaces,
-            and re-assembles. A small way of showing how I think about stateful systems:
-            they only make sense once you <em>drive</em> them.
+        <div class="scene3d__canvas" id="sceneCanvas" aria-label="Geometry stage">
+          <span class="scene3d__readout">
+            <b>/ GEOMETRY · 02</b><br/>
+            STATE: <span id="sceneState">STATEFUL</span>
+          </span>
+          <!-- canvas mounted by three-scene.js -->
+        </div>
+        <div class="scene3d__copy">
+          <div class="scene3d__head">
+            <span class="eyebrow">02 — IN MOTION</span>
+            <h2 class="h2">A SHAPE<br/>THAT <span class="fill-accent">REPLIES</span><br/>TO SCROLL.</h2>
+          </div>
+          <p class="scene3d__lede" id="sceneLede">
+            Real-time stateful systems &mdash; inputs and outputs coupled, feedback tight.
           </p>
           <ol class="scene3d__steps" id="sceneSteps">
-            <li data-step="0" data-copy="Real-time stateful systems — inputs and outputs coupled, feedback tight."><span>01</span> Knot</li>
-            <li data-step="1" data-copy="Deterministic, predictable loops — bounded, observable, never surprising."><span>02</span> Torus</li>
-            <li data-step="2" data-copy="Structured, faceted decisions — many small surfaces, one coherent whole."><span>03</span> Sphere</li>
-            <li data-step="3" data-copy="Exploration at scale — many actors, one emerging pattern."><span>04</span> Particles</li>
+            <li class="scene3d__step" data-step="0" data-no="[01]" data-state="STATEFUL"     data-lede="Real-time stateful systems — inputs and outputs coupled, feedback tight.">KNOT</li>
+            <li class="scene3d__step" data-step="1" data-no="[02]" data-state="DETERMINISTIC" data-lede="Deterministic, predictable loops — bounded, observable, never surprising.">TORUS</li>
+            <li class="scene3d__step" data-step="2" data-no="[03]" data-state="STRUCTURED"   data-lede="Structured, faceted decisions — many small surfaces, one coherent whole.">SPHERE</li>
+            <li class="scene3d__step" data-step="3" data-no="[04]" data-state="EMERGENT"     data-lede="Exploration at scale — many actors, one emerging pattern.">CLUSTER</li>
           </ol>
         </div>
       </div>
     </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section section--about" data-reveal>
-      <div class="about__grid">
-        <div class="about__left">
-          <span class="eyebrow"><span class="dot"></span> 02 — ABOUT</span>
-          <h2 class="section__title">
-            I like<br/>hard problems<br/>
-            with real&nbsp;ramifications.
-          </h2>
-        </div>
-        <div class="about__right">
-          <p>
-            I build software that has to <em>work</em> — not just look good in a demo.
-            A lot of what I do sits at the intersection of <strong>infrastructure</strong> and
-            <strong>product</strong>: HFT engines on Coinbase, an autonomous rescue drone,
-            full-stack tools for scam protection, multi-agent research systems.
-          </p>
-          <p>
-            Outside of code I read too much, argue about markets, and ship side projects at
-            unreasonable hours. Currently exploring autonomous systems, real-time data
-            pipelines, and the open edges of <strong>agentic AI</strong>.
-          </p>
-          <ul class="about__chips">
-            <li>systems thinking</li>
-            <li>shipping &gt; perfect</li>
-            <li>autonomy &amp; agents</li>
-            <li>real-time data</li>
-            <li>low-latency C++/Rust</li>
-            <li>full-stack TypeScript</li>
-          </ul>
+    <!-- ========================================================
+         ABOUT — left paragraph + right stats column
+         ======================================================== -->
+    <section id="about" class="about" data-reveal>
+      <div class="wrap">
+        <header class="section__head">
+          <span class="eyebrow">03 — ABOUT</span>
+          <h2 class="h2">I LIKE<br/>HARD PROBLEMS<br/>WITH REAL <span class="fill-accent">RAMIFICATIONS</span>.</h2>
+        </header>
+
+        <div class="about__grid">
+          <div class="about__left">
+            <p class="body-text">
+              I'm <strong>Amos</strong>, an engineer in Singapore. I spend my time on the kind
+              of systems where the <em>failure modes are interesting</em> &mdash; things with
+              milliseconds of budget, things that move, things that have to keep running
+              while the world around them changes.
+            </p>
+            <p class="body-text" style="margin-top:20px">
+              I've shipped <strong>autonomous drones</strong>, an <strong>HFT framework</strong>
+              against BTC perpetuals, a <strong>consumer face-lock</strong> app used by tens of
+              thousands, a <strong>shopping-protection</strong> browser extension, and a handful
+              of smaller tools. I write mostly <strong>Python</strong>, <strong>TypeScript</strong>,
+              and <strong>Rust</strong>, with the occasional <strong>Solidity</strong> contract.
+            </p>
+            <p class="body-text" style="margin-top:20px">
+              Outside of code, I follow low-latency trading research, race the occasional
+              drone through a Singapore carpark, and try to keep the build-test-ship loop
+              as short as the work allows.
+            </p>
+          </div>
+          <div class="about__right">
+            <div class="about__stat">
+              <span class="num">05</span>
+              <span class="lbl">YEARS SHIPPING</span>
+            </div>
+            <div class="about__stat">
+              <span class="num">72</span>
+              <span class="lbl">REPOS ON GITHUB</span>
+            </div>
+            <div class="about__stat">
+              <span class="num">04</span>
+              <span class="lbl">CATEGORIES</span>
+            </div>
+            <div class="about__stat">
+              <span class="num">01</span>
+              <span class="lbl">TIMEZONE · UTC+8</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- STACK -->
-    <section id="stack" class="section section--stack" data-reveal>
-      <header class="section__head">
-        <span class="eyebrow"><span class="dot"></span> 03 — STACK</span>
-        <h2 class="section__title">
-          Tools I reach for.
+    <!-- ========================================================
+         STACK — table of tools
+         ======================================================== -->
+    <section id="stack" class="stack" data-reveal>
+      <div class="wrap">
+        <header class="section__head">
+          <span class="eyebrow">04 — STACK</span>
+          <h2 class="h2">TOOLS<br/>I REACH FOR.</h2>
+        </header>
+
+        <table class="stack-table" id="stackTable">
+          <thead>
+            <tr>
+              <th><span>LANGUAGES</span></th>
+              <th><span>INFRA</span></th>
+              <th><span>FRONTEND</span></th>
+              <th><span>ML / AI</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="item"><span class="year">05y</span>PYTHON</span>
+                <span class="item"><span class="year">04y</span>TYPESCRIPT</span>
+                <span class="item"><span class="year">03y</span>RUST</span>
+                <span class="item"><span class="year">02y</span>GO</span>
+                <span class="item"><span class="year">01y</span>SOLIDITY</span>
+              </td>
+              <td>
+                <span class="item">DOCKER</span>
+                <span class="item">KUBERNETES</span>
+                <span class="item">AWS / GCP</span>
+                <span class="item">TERRAFORM</span>
+                <span class="item">REDIS · POSTGRES</span>
+                <span class="item">KAFKA</span>
+              </td>
+              <td>
+                <span class="item">REACT</span>
+                <span class="item">NEXT.JS</span>
+                <span class="item">VITE</span>
+                <span class="item">THREE.JS</span>
+                <span class="item">TAILWIND</span>
+                <span class="item">GSAP</span>
+              </td>
+              <td>
+                <span class="item">PYTORCH</span>
+                <span class="item">HUGGINGFACE</span>
+                <span class="item">OPENCV</span>
+                <span class="item">LANGCHAIN</span>
+                <span class="item">DSPY</span>
+                <span class="item">VLLM</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         CTA / CONTACT
+         ======================================================== -->
+    <section id="contact" class="cta" data-reveal>
+      <div class="cta__inner">
+        <span class="eyebrow eyebrow--hot cta__eyebrow">05 — CONTACT</span>
+        <h2 class="h-display cta__title">
+          HAVE<br/>SOMETHING<br/><span class="fill-accent">INTERESTING</span><br/>TO BUILD?
         </h2>
-      </header>
-      <div class="stack-grid">
-        <div class="stack-col">
-          <h3>Languages</h3>
-          <ul>
-            <li>TypeScript</li>
-            <li>Python</li>
-            <li>C++ / Rust</li>
-            <li>SQL</li>
-            <li>Go (learning)</li>
-          </ul>
-        </div>
-        <div class="stack-col">
-          <h3>Infra</h3>
-          <ul>
-            <li>AWS · GCP</li>
-            <li>Docker · K8s</li>
-            <li>Postgres · Redis</li>
-            <li>Kafka · NATS</li>
-            <li>Vercel · Cloudflare</li>
-          </ul>
-        </div>
-        <div class="stack-col">
-          <h3>Frontend</h3>
-          <ul>
-            <li>Next.js · React</li>
-            <li>Three.js · WebGL</li>
-            <li>Tailwind · CSS</li>
-            <li>GSAP · Framer</li>
-            <li>Figma → code</li>
-          </ul>
-        </div>
-        <div class="stack-col">
-          <h3>ML / AI</h3>
-          <ul>
-            <li>PyTorch</li>
-            <li>LangChain · DSPy</li>
-            <li>HuggingFace</li>
-            <li>Vector DBs</li>
-            <li>Computer Vision</li>
-          </ul>
+        <p class="body-text cta__sub">
+          I take on <em>select</em> work &mdash; the kind where the problem is sharp
+          and the timeline is real. If that's you, the door is open.
+        </p>
+        <div class="cta__buttons">
+          <a class="pill pill--solid pill--big" href="mailto:project99sp@gmail.com">
+            <span class="pill__label">EMAIL ME</span>
+            <span class="pill__icon" aria-hidden="true">→</span>
+          </a>
+          <a class="pill pill--ghost pill--big" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
+            <span class="pill__label">GITHUB</span>
+            <span class="pill__icon" aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT / CTA -->
-    <section id="contact" class="section section--cta" data-reveal>
-      <h2 class="cta__title">
-        Have something<br/>
-        <span class="accent">interesting</span> to build?
-      </h2>
-      <p class="cta__sub">
-        Open to select freelance work, full-time roles, and collaboration on
-        autonomous systems, fintech infra, and ambitious product builds.
-      </p>
-      <div class="cta__buttons">
-        <a class="pill pill--holo pill--big" href="mailto:project99sp@gmail.com">
-          <span class="pill__label">project99sp@gmail.com</span>
-          <span class="pill__icon" aria-hidden="true">↗</span>
-        </a>
-        <a class="pill pill--ghost pill--big" href="https://github.com/WiseAmos" target="_blank" rel="noopener">
-          <span class="pill__label">GitHub</span>
-          <span class="pill__icon" aria-hidden="true">↗</span>
-        </a>
-      </div>
-    </section>
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div><b>© 2026</b> AMOS</div>
+      <div>SINGAPORE · UTC+8</div>
+      <div>LAST DEPLOY <b>2026-06-11</b></div>
+    </footer>
   </main>
 
-  <footer class="footer">
-    <div class="footer__row">
-      <span>© 2026 Amos</span>
-      <span>Built in Singapore</span>
-      <span>Last deploy: <span id="deployStamp">just now</span></span>
-    </div>
-  </footer>
-
-  <!-- GSAP for scroll reveals -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-  <!-- Three.js (ES module) -->
   <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
-    }
-  }
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
   </script>
 
   <script src="./projects.js"></script>
-  <script src="./intro-splash.js"></script>
   <script src="./marquee.js"></script>
   <script type="module" src="./three-hero.js"></script>
   <script type="module" src="./three-scene.js"></script>
