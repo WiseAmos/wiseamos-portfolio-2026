@@ -489,18 +489,26 @@ main { padding-top: 60px; } /* nav clearance */
   border-radius: 0;
 }
 
-/* BODY — right column with project info */
+/* BODY — right column with project info.
+   Structure: head (single thin label row at top), title, desc, foot.
+   Title sits immediately under the head with a small gap. */
 .card__body {
-  padding: 18px 20px 16px;
+  padding: 12px 20px 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px; /* tight — title feels attached to the head, not floating mid-card */
   min-width: 0; /* prevent grid blowout on long words */
 }
+/* HEAD — single thin row of meta above the title, no border/fill. */
 .card__head {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0;
+  font-size: 10px;
+  line-height: 1;
+  min-height: 14px; /* fixed height so the title sits at a predictable offset */
+}
   gap: 12px;
 }
 .card__no {
@@ -598,17 +606,17 @@ main { padding-top: 60px; } /* nav clearance */
   position: relative;
   max-width: 1400px;
   margin: 0 auto;
-  padding-left: 80px; /* leaves room for the rail */
+  padding: 0;
 }
-/* The rail — a 1px vertical line, fills with lime as user scrolls.
-   Implementation: a 1px black base line plus a 1px lime overlay that
-   scales in Y from top to bottom (driven by JS). */
+/* The rail sits in the gap column of the grid (column 1, ~40px wide).
+   The dot is a real <span> on each step, not a pseudo, so it can be
+   aligned to the rail by living in the same column. */
 .timeline__rail {
   position: absolute;
   top: 0;
-  left: 6px; /* aligned with the step dots (16px square, left-aligned starting at 8px) */
-  width: 4px;
-  height: 100%;
+  bottom: 0;
+  left: 16px; /* centered in the 40px column 1 (16px from its left edge) */
+  width: 2px;
   background: var(--ink);
   z-index: 0;
 }
@@ -625,30 +633,38 @@ main { padding-top: 60px; } /* nav clearance */
 
 .timeline__step {
   position: relative;
-  padding: 32px 0 32px 40px;
+  padding: 28px 0 28px 0;
   border-top: 1px solid var(--ink);
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  grid-template-columns: 40px 1fr;
+  gap: 24px;
+  align-items: start;
 }
 .timeline__step:last-child { border-bottom: 1px solid var(--ink); }
 .timeline__step:first-child { border-top: 0; padding-top: 0; }
 
-/* The dot on the rail */
-.timeline__step::before {
-  content: '';
-  position: absolute;
-  left: -72px; /* aligns with the rail (16px) minus 8px radius = 8px from rail */
-  top: 38px;
+/* The dot — a real span on each step, positioned in column 1.
+   The rail at left:16px (centered) lines up with the 16px-wide dot. */
+.timeline__dot {
   width: 16px;
   height: 16px;
   background: var(--paper);
   border: 1px solid var(--ink);
+  position: relative;
+  top: 6px; /* aligns with the title baseline */
+  left: 10px; /* 16px (half of 40px column) - 8px (half of 16px dot) = 8px ... adjusted to 10 for the rail at 16px */
   z-index: 1;
   transition: background 80ms linear;
 }
-.timeline__step.is-active::before { background: var(--accent); }
-.timeline__step:first-child::before { top: 6px; }
+.timeline__step.is-active .timeline__dot { background: var(--accent); }
+
+/* The content column of the step (the right side, beside the dot) */
+.timeline__content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
 
 .timeline__no {
   font: 500 11px/1 var(--t-mono);
