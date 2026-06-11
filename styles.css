@@ -336,17 +336,23 @@ main { padding-top: 60px; } /* nav clearance */
 .work { padding: 80px 24px; border-bottom: 1px solid var(--ink); }
 .work__head {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 16px;
-  margin-bottom: 40px;
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
+  /* full-width: no auto-center, so the h2 and the eyebrow start at the same
+     x (the section's left padding). */
+  margin-bottom: 56px;
 }
-.work__head h2 { flex: 1; min-width: 0; }
-.work__head .count {
+.work__head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.work__head h2 {
+  /* Title on its own line, full width, left-aligned to the section's left edge */
+  width: 100%;
+  margin: 0;
+}.work__head .count {
   font: 500 12px/1 var(--t-mono);
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -608,14 +614,14 @@ main { padding-top: 60px; } /* nav clearance */
   margin: 0 auto;
   padding: 0;
 }
-/* The rail sits in the gap column of the grid (column 1, ~40px wide).
-   The dot is a real <span> on each step, not a pseudo, so it can be
-   aligned to the rail by living in the same column. */
+/* The rail sits to the right of the number column, where the dot lives.
+   Number is in column 1 (width 120, padding-right 24). Rail should be
+   just right of the number's right edge, where the dot center is. */
 .timeline__rail {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 16px; /* centered in the 40px column 1 (16px from its left edge) */
+  left: 116px; /* aligned with the dot center (which is at right:13 from no's right edge) */
   width: 2px;
   background: var(--ink);
   z-index: 0;
@@ -633,46 +639,64 @@ main { padding-top: 60px; } /* nav clearance */
 
 .timeline__step {
   position: relative;
-  padding: 28px 0 28px 0;
+  padding: 36px 0 36px 0;
   border-top: 1px solid var(--ink);
   display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 24px;
+  grid-template-columns: 120px 1fr;
+  column-gap: 32px;
   align-items: start;
 }
 .timeline__step:last-child { border-bottom: 1px solid var(--ink); }
 .timeline__step:first-child { border-top: 0; padding-top: 0; }
 
-/* The dot — a real span on each step, positioned in column 1.
-   The rail at left:16px (centered) lines up with the 16px-wide dot. */
-.timeline__dot {
-  width: 16px;
-  height: 16px;
-  background: var(--paper);
-  border: 1px solid var(--ink);
+/* The step number — a real span in column 1, big editorial type.
+   This replaces the small [01] [02] label as the visual anchor on the rail. */
+.timeline__no {
+  font: 700 56px/1 var(--t-mono);
+  text-transform: uppercase;
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  display: block;
+  text-align: right;
+  padding-right: 24px;
   position: relative;
-  top: 6px; /* aligns with the title baseline */
-  left: 10px; /* 16px (half of 40px column) - 8px (half of 16px dot) = 8px ... adjusted to 10 for the rail at 16px */
-  z-index: 1;
-  transition: background 80ms linear;
+  z-index: 2;
+  transition: color 200ms ease;
 }
-.timeline__step.is-active .timeline__dot { background: var(--accent); }
+.timeline__step.is-active .timeline__no { color: var(--accent); }
+.timeline__no::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  /* Position the dot so its CENTER is on the rail.
+     Rail is at left:116 (from timeline's left edge).
+     The .timeline__no is in column 1 (width 120, padding-right 24).
+     no's right edge is at column-1.right = 120 from timeline's left.
+     Distance from no's right edge to rail center is 120-116 = 4.
+     Dot is 18 wide, so dot's right edge needs to be 4+9 = 13px from the no's right edge. */
+  right: 13px;
+  z-index: 3;
+  transition: background 200ms ease, transform 200ms ease;
+}
+.timeline__step.is-active .timeline__no::after {
+  background: var(--accent);
+  transform: translateY(-50%) scale(1.15);
+}
 
-/* The content column of the step (the right side, beside the dot) */
+/* The content column of the step (the right side, beside the rail) */
 .timeline__content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
 }
 
-.timeline__no {
-  font: 500 11px/1 var(--t-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--mute);
-  display: inline-block;
-}
 .timeline__title {
   font: 700 clamp(24px, 3.2vw, 40px)/1.05 var(--t-mono);
   text-transform: uppercase;
