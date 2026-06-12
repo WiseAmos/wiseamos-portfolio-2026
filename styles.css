@@ -420,7 +420,7 @@ main { padding-top: 60px; } /* nav clearance */
 .card {
   position: relative;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 280px 1fr;
   border: 1px solid var(--ink);
   background: var(--paper);
   overflow: hidden;
@@ -468,38 +468,49 @@ main { padding-top: 60px; } /* nav clearance */
   opacity: 1;
 }
 
-/* GLYPH SLOT — left column, 4:3-ish aspect, project-specific mark */
+/* GLYPH SLOT — left column, square, single tonal treatment.
+   The mark is the hero: huge, bleed-to-edge, no competing pattern. */
 .card__glyph {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--paper);
+  background: color-mix(in srgb, var(--lang-color, var(--ink)) 12%, var(--paper));
   border-right: 1px solid var(--ink);
   aspect-ratio: 1 / 1;
   overflow: hidden;
   color: var(--ink);
-  background: color-mix(in srgb, var(--lang-color, var(--ink)) 12%, var(--paper));
+  container-type: inline-size; /* enables cqw for the mark */
   z-index: 2; /* sit above the hover wash */
 }
+/* Pattern element exists in DOM for layout-stability on cached pages,
+   but visually suppressed — the monogram owns the cell. */
 .card__glyph-pattern {
   position: absolute;
   inset: 0;
-  opacity: 0.85;
+  opacity: 0;
   pointer-events: none;
 }
 .card__glyph-mark {
   position: relative;
   z-index: 2;
-  font: 700 56px/0.9 var(--t-mono);
-  letter-spacing: -0.04em;
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
   color: var(--ink);
   text-transform: uppercase;
+  width: 100%;
+  text-align: center;
+  /* Scale to cell width. 1-char marks (₿) hit the cap, 3-char marks (ARD / "{ }")
+     shrink so they fit. 18cqw = ~18% of the cell width. */
+  font-size: clamp(72px, 18cqw, 180px);
 }
 .card__glyph-accent {
   position: absolute;
   z-index: 2;
-  font: 700 24px/1 var(--t-mono);
+  bottom: 10px;
+  right: 12px;
+  font: 700 16px/1 var(--t-mono);
   color: var(--lang-color, var(--ink));
 }
 /* Pattern: dots */
@@ -1283,12 +1294,13 @@ main { padding-top: 60px; } /* nav clearance */
   .work__head { padding-right: 0; }
   .work-grid { grid-template-columns: 1fr; gap: 16px; }
   .card {
-    grid-template-columns: 100px 1fr;
+    grid-template-columns: 120px 1fr;
   }
   .card__glyph {
     aspect-ratio: 1 / 1;
   }
-  .card__glyph-mark { font-size: 32px; }
+  .card__glyph-mark { font-size: clamp(48px, 24cqw, 96px); }
+  .card__glyph-accent { font-size: 12px; bottom: 6px; right: 8px; }
   .card__body { padding: 14px 14px 12px; gap: 8px; }
   .card__title { font-size: 15px; }
   .card__desc {
