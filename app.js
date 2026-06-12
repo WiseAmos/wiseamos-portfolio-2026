@@ -53,6 +53,7 @@
       const num = String(i + 1).padStart(2, '0');
       const topics = (p.topics || []).slice(0, 3).map(t => `<span class="tag">#${t}</span>`).join(' ');
       const g = p.glyph || { mark: '··', accent: '', pattern: 'dots' };
+      // Per-card mark size. Default to 200 if unspecified.
       const demoLink = p.liveDemo
         ? `<a class="card__btn card__btn--live" href="${p.liveDemo}" target="_blank" rel="noopener">LIVE <span aria-hidden="true">↗</span></a>`
         : '';
@@ -61,7 +62,7 @@
         <li class="card" data-pattern="${g.pattern}">
           <div class="card__glyph" style="--lang-color:${p.langColor || '#0A0A0A'}">
             <span class="card__glyph-pattern" aria-hidden="true"></span>
-            <span class="card__glyph-mark">${g.mark}</span>
+            <span class="card__glyph-mark" style="--mark-size:${g.size || 200}px">${g.mark}</span>
             ${g.accent ? `<span class="card__glyph-accent" aria-hidden="true">${g.accent}</span>` : ''}
           </div>
           <div class="card__body">

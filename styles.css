@@ -480,15 +480,15 @@ main { padding-top: 60px; } /* nav clearance */
   aspect-ratio: 1 / 1;
   overflow: hidden;
   color: var(--ink);
-  container-type: inline-size; /* enables cqw for the mark */
   z-index: 2; /* sit above the hover wash */
 }
 /* Pattern element exists in DOM for layout-stability on cached pages,
-   but visually suppressed — the monogram owns the cell. */
+   but visually suppressed — the monogram owns the cell.
+   !important beats the .card[data-pattern="*"] rules below. */
 .card__glyph-pattern {
   position: absolute;
   inset: 0;
-  opacity: 0;
+  opacity: 0 !important;
   pointer-events: none;
 }
 .card__glyph-mark {
@@ -501,9 +501,9 @@ main { padding-top: 60px; } /* nav clearance */
   text-transform: uppercase;
   width: 100%;
   text-align: center;
-  /* Scale to cell width. 1-char marks (₿) hit the cap, 3-char marks (ARD / "{ }")
-     shrink so they fit. 18cqw = ~18% of the cell width. */
-  font-size: clamp(72px, 18cqw, 180px);
+  /* Per-card size from inline --mark-size (1-char = ~240px, 2-char = ~200px,
+     3-char = ~130px). 0.8 factor shrinks to fit letterform height. */
+  font-size: calc(var(--mark-size, 200px) * 0.85);
 }
 .card__glyph-accent {
   position: absolute;
@@ -595,6 +595,11 @@ main { padding-top: 60px; } /* nav clearance */
   min-width: 0; /* prevent grid blowout on long words */
   position: relative;
   z-index: 2; /* sit above the hover wash */
+  /* Self-stretch to fill the cell (which stretches to the row's tallest card).
+     Without this, the body takes natural height and the foot drifts up on
+     shorter desc cards. */
+  height: 100%;
+  box-sizing: border-box;
 }
 /* HEAD — single thin row of meta above the title, no border/fill. */
 .card__head {
@@ -1299,7 +1304,8 @@ main { padding-top: 60px; } /* nav clearance */
   .card__glyph {
     aspect-ratio: 1 / 1;
   }
-  .card__glyph-mark { font-size: clamp(48px, 24cqw, 96px); }
+  /* Mobile cell is ~120px wide; scale --mark-size down 50% so 200px → 100px. */
+  .card__glyph-mark { font-size: calc(var(--mark-size, 200px) * 0.5); }
   .card__glyph-accent { font-size: 12px; bottom: 6px; right: 8px; }
   .card__body { padding: 14px 14px 12px; gap: 8px; }
   .card__title { font-size: 15px; }
