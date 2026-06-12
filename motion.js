@@ -89,6 +89,21 @@
     }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
 
     cards.forEach(c => io.observe(c));
+
+    // Safety net: if IO doesn't fire (headless, no scroll, no time
+    // advance, whatever), reveal everything after 1.2s. By then a
+    // real browser has already faded cards in via the IO; headless
+    // screenshots won't stay blank.
+    setTimeout(() => {
+      cards.forEach(c => {
+        if (c.classList.contains('is-in')) return;
+        const idx = cards.indexOf(c);
+        const row = Math.floor(idx / 2);
+        const col = idx % 2;
+        const delay = row * 160 + col * 90;
+        setTimeout(() => c.classList.add('is-in'), delay);
+      });
+    }, 1200);
   })();
 
   // ------------------------------------------------------------
@@ -126,6 +141,21 @@
     }, { threshold: 0.18, rootMargin: '0px 0px -5% 0px' });
 
     steps.forEach(s => io.observe(s));
+
+    // Safety net — same as cards. Reveal any step the IO missed after 1.2s.
+    setTimeout(() => {
+      steps.forEach((step, idx) => {
+        if (step.classList.contains('is-in')) return;
+        setTimeout(() => {
+          step.classList.add('is-in');
+          const bullets = step.querySelectorAll('.timeline__bullets li');
+          bullets.forEach((li, i) => {
+            if (li.classList.contains('is-in')) return;
+            setTimeout(() => li.classList.add('is-in'), 200 + i * 70);
+          });
+        }, idx * 120);
+      });
+    }, 1200);
   })();
 
   // ------------------------------------------------------------
@@ -206,53 +236,161 @@
   })();
 
   // ------------------------------------------------------------
-  // MARQUEE — adds pause-on-hover to the scroll-tied marquee and
-  // ramps the speed by current scroll velocity (subtle, capped).
-  // We hook into the existing marquee.js by wrapping its scroll
-  // handler: we set CSS custom properties the marquee.js already
-  // reads indirectly, but here we just override with a multiplier.
+  // SPLIT-FLAP TEXT — wrap each character of a [data-flap] heading
+  // in <span class="flap" data-final="X">X</span>, then on trigger
+  // scramble the char through random letters/symbols before
+  // settling on data-final. The .is-flipping class on each flap
+  // drives a horizontal seam-sweep CSS animation (see styles.css).
   //
-  // Approach: hijack the marquee row's transform directly with
-  // our own scroll handler. We duplicate the seam from marquee.js
-  // (which uses 0.45x scroll) and add velocity-based scaling on top.
+  // Text inside .fill-accent is left alone — the lime wipe is the
+  // only animation those chars get.
+  //
+  // Triggers:
+  //   - Hero: starts on page load (after splash settles)
+  //   - Section h2s: on first IntersectionObserver intersection
+  // ------------------------------------------------------------
+  (function splitFlap() {
+    if (reduceMotion) return;
+    const SAMPLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*+=<>?/\\';
+    const SCRAMBLE_TICKS = 6;   // number of random chars per flip
+    const SCRAMBLE_MS = 35;     // ms between random char swaps
+    const FLAP_MS = 280;        // matches CSS @keyframes flap-sweep
+    const PER_CHAR_DELAY = 28;  // stagger between adjacent chars
+
+    function wrapChars(root) {
+      // Walk text nodes. Skip .fill-accent (the lime wipe owns that).
+      // Skip .hero__line, .cta__line etc. inner spans — they hold the
+      // text and we want chars to be split ACROSS them, not per-line.
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: (node) => {
+          // Skip text inside .fill-accent.
+          if (node.parentElement.closest('.fill-accent')) return NodeFilter.FILTER_REJECT;
+          // Skip text inside the .flap spans themselves (idempotent guard).
+          if (node.parentElement.classList && node.parentElement.classList.contains('flap')) return NodeFilter.FILTER_REJECT;
+          // Skip empty / whitespace-only nodes.
+          return node.textContent.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      const textNodes = [];
+      let n;
+      while ((n = walker.nextNode())) textNodes.push(n);
+      textNodes.forEach(node => {
+        const text = node.textContent;
+        const frag = document.createDocumentFragment();
+        for (const ch of text) {
+          if (ch === '\n' || ch === '\r') {
+            frag.appendChild(document.createTextNode(ch));
+            continue;
+          }
+          // Preserve explicit spaces as plain text so word wrap still works.
+          if (ch === ' ') {
+            frag.appendChild(document.createTextNode(' '));
+            continue;
+          }
+          const span = document.createElement('span');
+          span.className = 'flap';
+          span.dataset.final = ch;
+          // Start the char hidden behind a final-state same char so the
+          // first paint doesn't show a flash of " ".
+          span.textContent = ch;
+          frag.appendChild(span);
+        }
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+
+    function pickRandom() {
+      return SAMPLE[Math.floor(Math.random() * SAMPLE.length)];
+    }
+
+    function flipChar(span, idx) {
+      const final = span.dataset.final;
+      if (!final) return;
+      // For whitespace / punctuation we don't animate; just settle.
+      if (final === ' ' || final === '.' || final === ',' || final === '!' || final === '?') return;
+      setTimeout(() => {
+        span.classList.add('is-flipping');
+        let i = 0;
+        const tick = () => {
+          if (i < SCRAMBLE_TICKS) {
+            span.textContent = pickRandom();
+            i += 1;
+            setTimeout(tick, SCRAMBLE_MS);
+          } else {
+            span.textContent = final;
+            setTimeout(() => span.classList.remove('is-flipping'), 40);
+          }
+        };
+        tick();
+      }, idx * PER_CHAR_DELAY);
+    }
+
+    function trigger(root) {
+      // If the root itself is in a hero__line / cta__line, also reveal
+      // the line by adding is-in (the line-by-line fade-up uses .is-in).
+      root.classList.add('is-in');
+      const flaps = Array.from(root.querySelectorAll('.flap'));
+      flaps.forEach(flipChar);
+    }
+
+    // Find all [data-flap] elements.
+    const targets = Array.from(document.querySelectorAll('[data-flap]'));
+    if (!targets.length) return;
+
+    // First, wrap the chars. This mutates the DOM but the visible text
+    // doesn't change (we set textContent = final char), so the user
+    // never sees a "before wrap" state.
+    targets.forEach(wrapChars);
+
+    // Then set up triggers. Hero (h1.hero__title) gets the page-load
+    // trigger (after the splash); section h2s get an IO trigger.
+    const hero = document.querySelector('h1.hero__title[data-flap]');
+    const sections = targets.filter(t => t !== hero);
+
+    if (hero) {
+      // Match the heroLines reveal — start after splash settles
+      // (700ms after page load), and also on first interaction.
+      const start = () => trigger(hero);
+      setTimeout(start, 700);
+      const early = () => {
+        window.removeEventListener('click', early);
+        window.removeEventListener('scroll', early);
+        window.removeEventListener('keydown', early);
+        start();
+      };
+      window.addEventListener('click', early, { once: true, passive: true });
+      window.addEventListener('scroll', early, { once: true, passive: true });
+      window.addEventListener('keydown', early, { once: true, passive: true });
+    }
+
+    if (sections.length) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          trigger(e.target);
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.4, rootMargin: '0px 0px -10% 0px' });
+      sections.forEach(s => io.observe(s));
+    }
+  })();
+
+  // ------------------------------------------------------------
+  // MARQUEE — pure CSS infinite scroll. Pause-on-hover is handled
+  // in styles.css (.marquee:hover .marquee__inner { animation-play-state:
+  // paused }). Nothing to do in JS, but we keep this IIFE as a
+  // hook in case we want to wire up scrub-speed or other behavior
+  // later. The .marquee--paused class is also exposed for any
+  // future JS-driven pause (e.g. when a modal opens).
   // ------------------------------------------------------------
   (function marqueePolish() {
     if (reduceMotion) return;
-    const row = document.getElementById('marqueeRow');
     const wrap = document.querySelector('.marquee');
-    if (!row || !wrap) return;
-
-    // Pause-on-hover via CSS class on the wrapper.
+    if (!wrap) return;
+    // Expose a JS toggle (CSS handles hover-pause automatically).
+    // No-op for now; kept for parity with the previous behavior
+    // and as a hook for future work.
     wrap.addEventListener('pointerenter', () => wrap.classList.add('marquee--paused'));
     wrap.addEventListener('pointerleave', () => wrap.classList.remove('marquee--paused'));
-
-    // Velocity-based speed ramp: we keep a running offset exactly
-    // like marquee.js, but scale the per-event delta by a factor
-    // derived from |scroll velocity|. 1.0x when still, up to 1.6x
-    // when scrolling fast.
-    let lastY = window.scrollY;
-    let lastT = performance.now();
-    let offset = parseFloat(row.style.transform.match(/-?\d+(\.\d+)?/)?.[0] || '0');
-    if (Number.isNaN(offset)) offset = 0;
-
-    addEventListener('scroll', () => {
-      if (wrap.classList.contains('marquee--paused')) {
-        // Update bookkeeping but don't move the marquee.
-        lastY = window.scrollY;
-        lastT = performance.now();
-        return;
-      }
-      const now = performance.now();
-      const y = window.scrollY;
-      const dt = Math.max(1, now - lastT);
-      const dy = y - lastY;
-      // px/ms → scale
-      const velocity = Math.abs(dy) / dt; // 0..~3 typically
-      const ramp = Math.min(1.6, 1 + velocity * 0.6);
-      offset -= dy * 0.45 * ramp;
-      row.style.transform = `translate3d(${offset}px, 0, 0)`;
-      lastY = y;
-      lastT = now;
-    }, { passive: true });
   })();
 })();

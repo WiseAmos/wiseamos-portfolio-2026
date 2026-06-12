@@ -351,6 +351,28 @@ main { padding-top: 60px; } /* nav clearance */
 .marquee__inner .fill-accent { background: var(--accent); color: var(--ink); padding: 0 8px; }
 .marquee__inner .fill-hot { background: var(--hot); color: var(--paper); padding: 0 8px; }
 
+/* Infinite marquee: the inner contains 4 identical sets of content, so
+   translating by -25% (= exactly one set width) lines up the next set
+   in the viewport and the loop resets seamlessly. 38s feels like a calm
+   editorial pace — not too fast, not a crawl. */
+@keyframes marquee-infinite {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-25%, 0, 0); }
+}
+.marquee__inner {
+  animation: marquee-infinite 38s linear infinite;
+  /* Allow animation to drive transform; motion.js no longer touches it. */
+  will-change: transform;
+}
+/* Pause on hover so the user can read a word. */
+.marquee:hover .marquee__inner,
+.marquee--paused .marquee__inner {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee__inner { animation: none; }
+}
+
 /* -------- WORK TABLE (v4 — 7 cols, no wrap) -------- */
 .work { padding: 80px 24px; border-bottom: 1px solid var(--ink); }
 .work__head {
@@ -663,7 +685,18 @@ main { padding-top: 60px; } /* nav clearance */
 
 /* -------- PROCESS / TIMELINE (v4 — replaces scene) -------- */
 .process { padding: 100px 24px; border-bottom: 1px solid var(--ink); }
-.process .section__head { max-width: 1400px; margin-left: auto; margin-right: auto; }
+/* Indent the section head so its left edge lines up with the timeline's
+   content column (col-1 number gutter + gap). The timeline content starts
+   at clamp(60px,7vw,140px) + clamp(20px,2.5vw,40px) from the .timeline
+   left edge, which is the same as the .wrap left edge. We apply the
+   same indent here so the eyebrow / h2 / lede visually lead into the
+   timeline rows rather than sit ~100px to their left. */
+.process .section__head {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: calc(clamp(60px, 7vw, 140px) + clamp(20px, 2.5vw, 40px));
+}
 
 .timeline {
   list-style: none;
@@ -1160,4 +1193,59 @@ html.has-cursor.is-hovering .cursor__ring { width: 52px; height: 52px; margin: -
 }
 @media (prefers-reduced-motion: reduce) {
   .grain { display: none; }
+}
+
+/* -------- SPLIT-FLAP TEXT (v9) -------- */
+/* Each character of a heading is wrapped in <span class="flap"
+   data-final="X">X</span> by motion.js. The flap renders the same
+   font and color as the parent, but on .is-flipping a horizontal
+   seam sweeps across the middle of the char while JS scrambles
+   the textContent. The end state shows the final character.
+
+   This is a "kinda" split-flap: not a perfect 3D mechanical
+   recreation, but the seam + scramble reads as a Solari board. */
+.flap {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  line-height: inherit;
+  /* Slight scale to prevent horizontal jitter when the font glyphs
+     have slightly different advance widths (the wrap-from-text-node
+     already keeps the width fixed). */
+  font-variant-numeric: tabular-nums;
+}
+.flap::after {
+  /* the seam line */
+  content: '';
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  height: 2px;
+  background: var(--ink);
+  transform: scaleX(0) scaleY(1);
+  transform-origin: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.flap.is-flipping::after {
+  animation: flap-sweep 280ms cubic-bezier(.5, 0, .5, 1) forwards;
+}
+@keyframes flap-sweep {
+  0%   { transform: scaleX(0) scaleY(1); opacity: 0; }
+  20%  { transform: scaleX(0) scaleY(1); opacity: 0; }
+  45%  { transform: scaleX(1) scaleY(1.2); opacity: 1; }
+  70%  { transform: scaleX(1) scaleY(1.2); opacity: 1; }
+  100% { transform: scaleX(0) scaleY(1); opacity: 0; }
+}
+/* The headline as a whole is also clamped to a consistent line
+   height so individual flips don't shift the baseline. */
+[data-flap] {
+  line-height: 1.05;
+  /* Prevent layout shift as char widths change during scramble. */
+  font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Skip the animation, just show the final character. */
+  .flap::after { animation: none !important; display: none; }
 }
