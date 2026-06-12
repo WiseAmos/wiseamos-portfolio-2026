@@ -818,10 +818,11 @@ main { padding-top: 60px; } /* nav clearance */
   column-gap: clamp(24px, 4vw, 80px);
   padding: 24px 8vw 80px 8vw;
   opacity: 0.18;            /* dim non-focused steps */
-  transition: opacity 320ms ease;
-}
-.process__step.is-active {
-  opacity: 1;
+  /* No opacity transition: the active state is JS-driven and snaps
+     instantly with the scroll position. A 320ms transition here
+     caused a visible "wrong active step" glitch on fast back-scroll,
+     where the new active step was still dim and the old one was
+     still bright for ~300ms. The dimming should be authoritative. */
 }
 .process__step.is-active .process__step-num {
   color: var(--accent);
@@ -1030,7 +1031,8 @@ main { padding-top: 60px; } /* nav clearance */
   grid-template-columns: 1fr 1.6fr;
   align-items: center;
   column-gap: clamp(24px, 4vw, 80px);
-  transition: opacity 320ms ease;
+  /* No opacity transition — see .process__step above. The active
+     state is JS-driven and snaps with the scroll position. */
 }
 .js .process__step.is-active { opacity: 1; }
 .js .process__step-num { font-size: clamp(120px, 16vw, 240px); }
