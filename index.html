@@ -169,14 +169,39 @@
          ======================================================== -->
     <section id="process" class="process" data-reveal>
       <div class="wrap">
+        <!-- Sticky SONAR status bar. Pinned to top of section, shows
+             which step is current + how many have been "hit". -->
+        <div class="process-sonar" aria-hidden="true">
+          <span class="process-sonar__ping"></span>
+          <span>sonar</span>
+          <span class="process-sonar__sep">/</span>
+          <span>process.section</span>
+          <span class="process-sonar__sep">·</span>
+          <span>step</span>
+          <span class="process-sonar__current" data-sonar-current>00</span>
+          <span class="process-sonar__count">
+            <span data-sonar-hits>00</span> / 04 hit
+          </span>
+        </div>
+
         <header class="section__head">
           <span class="eyebrow">02 — PROCESS</span>
           <h2 class="h2" data-flap>HOW I<br/>BUILD <span class="fill-accent">THINGS</span>.</h2>
           <p class="body-text">Four modes, mixed and matched depending on the problem. None of them are sacred.</p>
         </header>
 
+        <!-- NOW READING — pill that names the step currently
+             centered in the viewport. Updated by app.js timeline IIFE. -->
+        <div class="now-reading" aria-live="polite">
+          <span class="now-reading__dot"></span>
+          <span>Now reading: step <span data-now-reading-num>00</span> / 04</span>
+        </div>
+
         <ol class="timeline" aria-label="Process steps">
           <span class="timeline__rail" aria-hidden="true"></span>
+          <!-- The horizontal sweep that travels down the rail
+               as the user scrolls. Driven by CSS view(). -->
+          <span class="timeline__sweep" aria-hidden="true"></span>
 
           <li class="timeline__step">
             <span class="timeline__no">01</span>

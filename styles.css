@@ -725,8 +725,18 @@ main { padding-top: 60px; } /* nav clearance */
   height: 100%;
   background: var(--accent);
   transform-origin: top center;
-  transform: scaleY(var(--rail-progress, 0));
-  transition: transform 80ms linear;
+  /* Driven by native CSS scroll-driven animation. The ::after is a
+     pseudo of .timeline__rail, so we use the rail's own view() timeline.
+     Browsers without animation-timeline: view() support will simply
+     show scaleY(0) (no fill) — graceful degradation. */
+  transform: scaleY(0);
+  animation: rail-fill linear forwards;
+  animation-timeline: view();
+  animation-range: cover;
+}
+@keyframes rail-fill {
+  to { transform: scaleY(1); }
+}
 }
 
 .timeline__step {
@@ -850,6 +860,189 @@ main { padding-top: 60px; } /* nav clearance */
   color: var(--accent);
   font-weight: 700;
   margin-right: 6px;
+}
+
+/* ------------------------------------------------------------
+   SONAR STATUS BAR — sticky black bar at the top of the .process
+   section. Shows the section identity (SONAR / PROCESS.SECTION)
+   and tracks how many steps have been "hit" (visited). Combined
+   with the rail fill + sweep, gives the section the feel of a
+   system reading a log line-by-line.
+   ------------------------------------------------------------ */
+.process-sonar {
+  position: sticky;
+  /* Position below the main nav (which is fixed at top:0, height ~52px).
+     The 0.5px offset prevents the sticky from "shimmering" at the
+     intersection with the nav bottom border. */
+  top: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  margin: 0 -24px 24px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 500 11px/1 var(--t-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  z-index: 8;
+  border-bottom: 1px solid var(--ink);
+}
+.process-sonar__ping {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--hot);
+  position: relative;
+  flex-shrink: 0;
+}
+.process-sonar__ping::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--hot);
+  animation: sonar-ping 1.4s ease-in-out infinite;
+}
+@keyframes sonar-ping {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.process-sonar__sep { color: var(--mute); opacity: 0.5; }
+.process-sonar__current {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.process-sonar__count {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------
+   NOW READING — pill below the heading. Shows which step is
+   currently centered in the viewport. Updated by app.js.
+   Sticky to the top of the section (below the SONAR bar) so
+   it stays visible as the user scrolls through the steps.
+   ------------------------------------------------------------ */
+.now-reading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6px 10px;
+  font: 500 11px/1 var(--t-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin: 0 0 32px;
+  z-index: 5;
+  /* Sticky to the same position as the SONAR bar (below nav).
+     This keeps the indicator visible while scrolling through
+     the timeline. */
+  position: sticky;
+  top: 88px;  /* SONAR bar (52) + SONAR height (28) + 8px gap */
+  align-self: flex-start;  /* don't stretch to full width */
+}
+.now-reading__dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: now-reading-pulse 1.2s ease-in-out infinite;
+}
+@keyframes now-reading-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+/* ------------------------------------------------------------
+   TIMELINE SWEEP — horizontal orange line that travels down the
+   rail as the user scrolls through the section. Reads as a
+   "scanner" rather than decoration. A small triangle on the
+   rail side makes the direction obvious.
+   ------------------------------------------------------------ */
+.timeline__sweep {
+  position: absolute;
+  left: calc(clamp(60px, 7vw, 140px) - 32px);
+  right: -10px;
+  top: 0;
+  height: 2px;
+  background: var(--hot);
+  box-shadow: 0 0 18px 2px rgba(255, 87, 34, 0.35);
+  z-index: 5;
+  animation: sweep linear forwards;
+  animation-timeline: view();
+  animation-range: cover;
+  pointer-events: none;
+}
+/* The "scanner head" on the rail side — small triangle so the
+   direction of travel is unambiguous. */
+.timeline__sweep::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform: translateY(-50%);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid var(--hot);
+}
+@keyframes sweep {
+  0%   { top: 0; }
+  100% { top: 100%; }
+}
+
+/* Browsers without view() support: hide the sweep + sonar so
+   nothing breaks the layout. The rail fill defaults to scaleY(0)
+   (no fill) which is fine — the active step's lime dot still
+   marks progress. */
+@supports not (animation-timeline: view()) {
+  .timeline__sweep,
+  .process-sonar__ping::after { display: none; }
+  .timeline__rail::after {
+    animation: none;
+    /* Default to fully filled so the rail is visible in browsers
+       that don't get the scroll-driven fill. */
+    transform: scaleY(1);
+  }
+}
+
+/* Reduced motion: skip all scroll-driven animations, show full
+   rail fill, hide the sweep (the visual benefit is the linear
+   motion which is exactly what we want to suppress). */
+@media (prefers-reduced-motion: reduce) {
+  .timeline__rail::after,
+  .timeline__sweep {
+    animation: none;
+  }
+  .timeline__rail::after { transform: scaleY(1); }
+  .timeline__sweep { display: none; }
+  .process-sonar__ping::after { animation: none; }
+  .now-reading__dot { animation: none; }
+}
+
+/* ------------------------------------------------------------
+   PROCESS MOBILE — the desktop layout uses 60-140px col 1, but
+   on small screens that eats too much horizontal real estate.
+   Mobile rules shrink the column, push the rail inward, and
+   let the status bar wrap.
+   ------------------------------------------------------------ */
+@media (max-width: 900px) {
+  .process-sonar {
+    top: 44px;  /* mobile nav is shorter */
+    margin: 0 -16px 20px;
+    padding: 6px 12px;
+    font-size: 10px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .process-sonar__count { margin-left: auto; }
+  .now-reading { margin-bottom: 24px; }
+  .timeline__sweep {
+    left: calc(50px - 26px);
+  }
 }
 
 /* The rail is filled by scaling the ::before of each step's active dot, but

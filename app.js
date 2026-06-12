@@ -109,6 +109,14 @@
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
     els.forEach(el => io.observe(el));
+    // Safety net — IO can miss sections that are already in view on
+    // load (deep-link, headless screenshot, prefers-reduced-motion).
+    // Mirror the pattern from motion.js workCards/timelineStagger.
+    setTimeout(() => {
+      els.forEach(el => {
+        if (!el.classList.contains('is-in')) el.classList.add('is-in');
+      });
+    }, 1200);
   })();
 
   // ------------------------------------------------------------
@@ -176,28 +184,25 @@
   })();
 
   // ------------------------------------------------------------
-  // TIMELINE — fills the rail on the process section as the
-  // user scrolls through it. Pure CSS for the rail, JS for the
-  // active step highlighting.
+  // TIMELINE — highlights the active step (driven by app.js IO so
+  // it works even where CSS view() doesn't — Safari pre-26, mobile
+  // quirks). The rail fill, sweep, and status-bar interactions are
+  // driven by native CSS animation-timeline: view() (see styles.css).
   // ------------------------------------------------------------
   (function timeline() {
+    const section = document.querySelector('.timeline');
     const rail = document.querySelector('.timeline__rail');
     const steps = Array.from(document.querySelectorAll('.timeline__step'));
-    if (!rail || !steps.length) return;
+    if (!section || !rail || !steps.length) return;
+    // No-op hook for status bar / NOW READING updates when active changes.
+    const statusNum = document.querySelector('[data-sonar-current]');
+    const statusHits = document.querySelector('[data-sonar-hits]');
+    const nowReading = document.querySelector('[data-now-reading-num]');
+    const hexChars = '0123456789ABCDEF';
+    const hitSet = new Set();
     function update() {
-      const section = document.querySelector('.timeline');
-      if (!section) return;
       const r = section.getBoundingClientRect();
       const vh = window.innerHeight;
-      // progress 0..1 across the section, with a 200px start offset
-      const start = vh * 0.55;
-      const total = r.height - start;
-      const scrolled = Math.min(Math.max(start - r.top, 0), total);
-      const pct = total > 0 ? scrolled / total : 0;
-      // Set a CSS variable that drives the ::after transform.
-      // (We can't write to a pseudo-element's transform directly,
-      // so we use --rail-progress and let CSS apply it.)
-      rail.style.setProperty('--rail-progress', String(pct));
       // active step = the deepest one whose top has passed the start line
       let active = -1;
       steps.forEach((s, i) => {
@@ -205,10 +210,30 @@
         if (sr.top < vh * 0.5) active = i;
       });
       steps.forEach((s, i) => s.classList.toggle('is-active', i === active));
+      // Hex flash on the step number when it first becomes active.
+      if (active >= 0 && !hitSet.has(active)) {
+        hitSet.add(active);
+        const noEl = steps[active].querySelector('.timeline__no');
+        if (noEl) {
+          const final = noEl.textContent;
+          let frames = 0;
+          const id = setInterval(() => {
+            noEl.textContent = hexChars[Math.floor(Math.random() * 16)] +
+                               hexChars[Math.floor(Math.random() * 16)];
+            frames++;
+            if (frames > 5) { clearInterval(id); noEl.textContent = final; }
+          }, 60);
+        }
+      }
+      // Status bar: which step is currently shown
+      if (statusNum) statusNum.textContent = String(Math.max(0, active + 1)).padStart(2, '0');
+      if (nowReading) nowReading.textContent = String(Math.max(0, active + 1)).padStart(2, '0');
+      // Hit counter: how many unique steps have been visited
+      if (statusHits) statusHits.textContent = String(hitSet.size).padStart(2, '0');
     }
     let ticking = false;
     addEventListener('scroll', () => {
-      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+      if (!ticking) { requestAnimationFrame(() => { ticking = false; update(); }); ticking = true; }
     }, { passive: true });
     update();
   })();
