@@ -698,203 +698,49 @@ main { padding-top: 60px; } /* nav clearance */
 
 .work__more { margin-top: 32px; max-width: 1400px; margin-left: auto; margin-right: auto; display: inline-flex; }
 
-/* -------- PROCESS / TIMELINE (v4 — replaces scene) -------- */
-.process { padding: 100px 24px; border-bottom: 1px solid var(--ink); }
-/* Indent the section head so its left edge lines up with the timeline's
-   content column (col-1 number gutter + gap). The timeline content starts
-   at clamp(60px,7vw,140px) + clamp(20px,2.5vw,40px) from the .timeline
-   left edge, which is the same as the .wrap left edge. We apply the
-   same indent here so the eyebrow / h2 / lede visually lead into the
-   timeline rows rather than sit ~100px to their left. */
-.process .section__head {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: calc(clamp(60px, 7vw, 140px) + clamp(20px, 2.5vw, 40px));
+/* -------- PROCESS — PINNED HORIZONTAL SCROLL (v15) -------- */
+/* The section is 4 viewport heights tall (4 × 100vh = 400vh), providing
+   the scroll range. Inside, a sticky child pins to the viewport and
+   holds the visible content. As the user scrolls vertically through
+   the 400vh, the track inside the sticky child slides horizontally,
+   revealing each of the 4 steps in turn. Each step's body words
+   highlight progressively as the user scrolls through that step. */
+
+.process {
+  height: 400vh;          /* 4 viewports of scroll range */
+  position: relative;
+  border-bottom: 1px solid var(--ink);
+  /* The track is driven by JS (app.js process() IIFE) which sets
+     `style.transform = translateX(...)` on .process__track on every
+     scroll. The math is straightforward: track translates 0 → -300vw
+     as the user scrolls from 0% to 100% through the section. JS
+     also sets the .is-active class on the step at progress * 4
+     (so step 1 at 0-25%, step 2 at 25-50%, etc). */
+  --track-x: 0px;         /* updated by JS */
 }
 
-.timeline {
-  list-style: none;
-  position: relative;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0;
-}
-/* The rail sits just inside the right edge of column 1 (the number gutter).
-   Column 1 width is clamp(60px, 7vw, 140px) — see .timeline__step.
-   Rail is at column 1's right edge minus 4px so the dot on it (which is
-   18px wide, centered on rail) is partly inside column 1. */
-.timeline__rail {
-  position: absolute;
+.process__sticky {
+  position: sticky;
   top: 0;
-  bottom: 0;
-  left: calc(clamp(60px, 7vw, 140px) - 4px);
-  width: 2px;
-  background: var(--ink);
-  z-index: 0;
-}
-.timeline__rail::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 100%;
-  background: var(--accent);
-  transform-origin: top center;
-  /* Driven by native CSS scroll-driven animation. The ::after is a
-     pseudo of .timeline__rail, so we use the rail's own view() timeline.
-     Browsers without animation-timeline: view() support will simply
-     show scaleY(0) (no fill) — graceful degradation. */
-  transform: scaleY(0);
-  animation: rail-fill linear forwards;
-  animation-timeline: view();
-  animation-range: cover;
-}
-@keyframes rail-fill {
-  to { transform: scaleY(1); }
-}
-}
-
-.timeline__step {
-  position: relative;
-  padding: 36px 0 36px 0;
-  border-top: 1px solid var(--ink);
+  height: 100vh;
+  overflow: hidden;
   display: grid;
-  /* Column 1 = the number gutter. clamp() shrinks it on smaller viewports
-     so the content column doesn't feel pushed to the right. */
-  grid-template-columns: clamp(60px, 7vw, 140px) 1fr;
-  column-gap: clamp(20px, 2.5vw, 40px);
-  align-items: start;
-  /* Stagger-in default */
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 540ms cubic-bezier(.2,.7,.2,1),
-    transform 540ms cubic-bezier(.2,.7,.2,1);
-}
-.timeline__step.is-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-.timeline__step:last-child { border-bottom: 1px solid var(--ink); }
-.timeline__step:first-child { border-top: 0; padding-top: 0; }
-
-/* The step number — a real span in column 1, big editorial type.
-   This replaces the small [01] [02] label as the visual anchor on the rail. */
-.timeline__no {
-  font: 700 56px/1 var(--t-mono);
-  text-transform: uppercase;
-  color: var(--ink);
-  letter-spacing: -0.04em;
-  display: block;
-  text-align: right;
-  padding-right: 36px; /* a bit more breathing room between the number's right edge and the rail */
-  position: relative;
-  z-index: 2;
-  transition: color 200ms ease;
-}
-.timeline__step.is-active .timeline__no { color: var(--accent); }
-.timeline__no::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
+  grid-template-rows: auto auto 1fr auto;
+  padding: 24px 0 0 0;
   background: var(--paper);
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  /* Position the dot so its CENTER is on the rail.
-     Rail is at left:116 (from timeline's left edge).
-     The .timeline__no is in column 1 (width 120, padding-right 24).
-     no's right edge is at column-1.right = 120 from timeline's left.
-     Distance from no's right edge to rail center is 120-116 = 4.
-     Dot is 18 wide, so dot's right edge needs to be 4+9 = 13px from the no's right edge. */
-  right: 13px;
-  z-index: 3;
-  transition: background 200ms ease, transform 200ms ease;
-}
-.timeline__step.is-active .timeline__no::after {
-  background: var(--accent);
-  transform: translateY(-50%) scale(1.15);
 }
 
-/* The content column of the step (the right side, beside the rail) */
-.timeline__content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
-.timeline__title {
-  font: 700 clamp(24px, 3.2vw, 40px)/1.05 var(--t-mono);
-  text-transform: uppercase;
-  color: var(--ink);
-  letter-spacing: -0.01em;
-}
-.timeline__count {
-  display: inline-block;
-  font: 500 12px/1 var(--t-mono);
-  letter-spacing: 0.1em;
-  color: var(--mute);
-  margin-left: 8px;
-  vertical-align: middle;
-}
-.timeline__body {
-  max-width: 60ch;
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--ink);
-}
-.timeline__bullets {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font: 500 12px/1.4 var(--t-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--mute);
-  border-top: 1px dashed var(--mute);
-  padding-top: 12px;
-  margin-top: 4px;
-  max-width: 60ch;
-}
-.timeline__bullets li {
-  padding: 4px 0;
-  /* Stagger-in: each bullet fades in, JS adds .is-in */
-  opacity: 0;
-  transform: translateX(-6px);
-  transition: opacity 360ms ease, transform 360ms ease;
-}
-.timeline__step.is-in .timeline__bullets li.is-in {
-  opacity: 1;
-  transform: translateX(0);
-}
-.timeline__bullets li::before {
-  content: '— ';
-  color: var(--accent);
-  font-weight: 700;
-  margin-right: 6px;
-}
-
-/* ------------------------------------------------------------
-   SONAR STATUS BAR — sticky black bar at the top of the .process
-   section. Shows the section identity (SONAR / PROCESS.SECTION)
-   and tracks how many steps have been "hit" (visited). Combined
-   with the rail fill + sweep, gives the section the feel of a
-   system reading a log line-by-line.
-   ------------------------------------------------------------ */
+/* SONAR status bar — same as before but inside the sticky child so
+   it scrolls naturally with the section. Positioned below the
+   fixed main nav. */
 .process-sonar {
   position: sticky;
-  /* Position below the main nav (which is fixed at top:0, height ~52px).
-     The 0.5px offset prevents the sticky from "shimmering" at the
-     intersection with the nav bottom border. */
   top: 52px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px;
-  margin: 0 -24px 24px;
+  padding: 8px 24px;
+  margin: 0;
   background: var(--ink);
   color: var(--paper);
   font: 500 11px/1 var(--t-mono);
@@ -933,140 +779,323 @@ main { padding-top: 60px; } /* nav clearance */
   font-variant-numeric: tabular-nums;
 }
 
-/* ------------------------------------------------------------
-   NOW READING — pill below the heading. Shows which step is
-   currently centered in the viewport. Updated by app.js.
-   Sticky to the top of the section (below the SONAR bar) so
-   it stays visible as the user scrolls through the steps.
-   ------------------------------------------------------------ */
-.now-reading {
-  display: inline-flex;
+/* Section heading — inline above the track, not full-width.
+   Uses the same eyebrow + h2 as the rest of the site. */
+.section__head--inline {
+  max-width: 1400px;
+  margin: 16px auto 0;
+  padding: 0 24px;
+}
+.section__head--inline .eyebrow { display: block; margin-bottom: 4px; }
+.section__head--inline .h2 { font-size: clamp(28px, 4vw, 48px); line-height: 1; margin: 0; }
+
+/* The horizontal track — 4 × 100vw wide, slides left as the user
+   scrolls. Transform is set by JS (app.js process() IIFE) — JS is
+   the single source of truth so the track position and the active
+   step class stay in sync. The track moves in discrete jumps
+   (one per step), but a CSS transition on the transform makes
+   the jumps feel like a smooth slide. */
+.process__track {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  width: 400vw;             /* 4 steps × 100vw */
+  will-change: transform;
+  transform: translateX(var(--track-x, 0px));
+  transition: transform 360ms cubic-bezier(.5, 0, .25, 1);
+}
+
+/* Each step — 100vw wide, full height of the sticky child.
+   Inactive steps (left/right of the active one) are dimmed so the
+   eye lands on the focused step. */
+.process__step {
+  width: 100vw;
+  flex-shrink: 0;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
   align-items: center;
-  gap: 10px;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 6px 10px;
-  font: 500 11px/1 var(--t-mono);
+  column-gap: clamp(24px, 4vw, 80px);
+  padding: 24px 8vw 80px 8vw;
+  opacity: 0.18;            /* dim non-focused steps */
+  transition: opacity 320ms ease;
+}
+.process__step.is-active {
+  opacity: 1;
+}
+.process__step.is-active .process__step-num {
+  color: var(--accent);
+}
+
+/* The big number — the visual hero of each step. */
+.process__step-num {
+  font: 700 clamp(120px, 16vw, 240px)/0.85 var(--t-mono);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  margin: 0 0 32px;
-  z-index: 5;
-  /* Sticky to the same position as the SONAR bar (below nav).
-     This keeps the indicator visible while scrolling through
-     the timeline. */
-  position: sticky;
-  top: 88px;  /* SONAR bar (52) + SONAR height (28) + 8px gap */
-  align-self: flex-start;  /* don't stretch to full width */
+  color: var(--ink);
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  transition: color 320ms ease;
+  user-select: none;
 }
-.now-reading__dot {
+
+.process__step-body {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 24px);
+  min-width: 0;
+}
+
+.process__step-title {
+  font: 700 clamp(28px, 4vw, 56px)/1.05 var(--t-mono);
+  text-transform: uppercase;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.process__step-count {
   display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: now-reading-pulse 1.2s ease-in-out infinite;
-}
-@keyframes now-reading-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
+  font: 500 14px/1 var(--t-mono);
+  letter-spacing: 0.1em;
+  color: var(--mute);
+  margin-left: 12px;
+  vertical-align: middle;
 }
 
-/* ------------------------------------------------------------
-   TIMELINE SWEEP — horizontal orange line that travels down the
-   rail as the user scrolls through the section. Reads as a
-   "scanner" rather than decoration. A small triangle on the
-   rail side makes the direction obvious.
-   ------------------------------------------------------------ */
-.timeline__sweep {
-  position: absolute;
-  left: calc(clamp(60px, 7vw, 140px) - 32px);
-  right: -10px;
+.process__step-text {
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.7;
+  color: var(--ink);
+  max-width: 56ch;
+  margin: 0;
+}
+
+/* Words inside the step body — default to --mute. JS sets the
+   inline color based on scroll position: as the user scrolls
+   through a step, each word lights up when its threshold is
+   crossed. Words that have been scrolled past are --ink, words
+   that haven't are --mute. The CSS does NOT set a color for
+   .is-active — JS is the sole source of truth for word colors.
+   Scoped to .js so the pre-JS / no-JS state (vertical list)
+   shows all words in --ink. */
+.js .process__step-text .word {
+  display: inline-block;
+  color: var(--mute);
+  /* transition makes the per-word change feel smooth even if
+     the scroll fires faster than the JS update rate. */
+  transition: color 80ms linear;
+}
+
+.process__step-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font: 500 12px/1.4 var(--t-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mute);
+  border-top: 1px dashed var(--mute);
+  padding-top: 14px;
+  margin: 0;
+  max-width: 56ch;
+}
+.process__step-bullets li {
+  padding: 4px 0;
+  opacity: 0.4;
+  /* JS sets the inline opacity based on scroll position — bullets
+     light up in the last 20% of the step's range. The transition
+     makes the change smooth. */
+  transition: opacity 220ms ease;
+}
+.process__step-bullets li::before {
+  content: '— ';
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+/* Step counter — bottom of the sticky child, shows 01/04 etc. */
+.process__counter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  font: 700 14px/1 var(--t-mono);
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  border-top: 1px solid var(--ink);
+  background: var(--paper);
+  z-index: 4;
+}
+.process__counter-sep { color: var(--mute); }
+.process__counter-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--ink);
+  margin-left: 12px;
+}
+
+/* The step counter text is updated by JS as the track scrolls.
+   The CSS for the counter's appearance is constant. */
+
+/* No-JS state: vertical list, all content visible. The .no-js
+   class is removed by app.js (it adds .js instead). The
+   horizontal scroll layout below only applies when .js is
+   present on <html>. */
+.no-js .process { height: auto; }
+.no-js .process__sticky {
+  position: relative;
+  height: auto;
+  overflow: visible;
+}
+.no-js .process__track {
+  width: 100%;
+  flex-direction: column;
+  transform: none;
+}
+.no-js .process__step {
+  width: 100%;
+  height: auto;
+  padding: 56px 24px;
+  border-top: 1px solid var(--ink);
+  opacity: 1;
+}
+.no-js .process__step:first-child { border-top: 0; }
+.no-js .process__step-num { font-size: clamp(80px, 10vw, 160px); }
+.no-js .process__step-text .word { color: var(--ink); }
+.no-js .process__step-bullets li { opacity: 1; }
+.no-js .process-sonar__ping::after { animation: none; }
+.no-js .process__counter { display: none; }
+
+/* The no-JS state is also the FOUC-safe pre-JS state: by default,
+   show a vertical list. As soon as JS runs and adds .js, the
+   pinned horizontal layout kicks in (defined further down).
+   Without this, the page would briefly render a broken horizontal
+   layout (with 400vh height and 400vw track) before JS hydrates. */
+.process { height: auto; }
+.process__sticky {
+  position: relative;
+  height: auto;
+  overflow: visible;
+}
+.process__track {
+  width: 100%;
+  flex-direction: column;
+  transform: none;
+}
+.process__step {
+  width: 100%;
+  height: auto;
+  padding: 56px 24px;
+  border-top: 1px solid var(--ink);
+  opacity: 1;
+}
+.process__step:first-child { border-top: 0; }
+.process__step-num { font-size: clamp(80px, 10vw, 160px); }
+.process__step-text .word { color: var(--ink); }
+.process__step-bullets li { opacity: 1; }
+.process-sonar__ping::after { animation: none; }
+.process__counter { display: none; }
+
+/* Once JS hydrates, switch to the pinned horizontal scroll layout. */
+.js .process {
+  height: 400vh;          /* 4 viewports of scroll range */
+  position: relative;
+  border-bottom: 1px solid var(--ink);
+  --track-x: 0px;         /* updated by JS */
+}
+.js .process__sticky {
+  position: sticky;
   top: 0;
-  height: 2px;
-  background: var(--hot);
-  box-shadow: 0 0 18px 2px rgba(255, 87, 34, 0.35);
-  z-index: 5;
-  animation: sweep linear forwards;
-  animation-timeline: view();
-  animation-range: cover;
-  pointer-events: none;
+  height: 100vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  padding: 24px 0 0 0;
+  background: var(--paper);
 }
-/* The "scanner head" on the rail side — small triangle so the
-   direction of travel is unambiguous. */
-.timeline__sweep::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 0;
-  height: 0;
-  transform: translateY(-50%);
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid var(--hot);
+.js .process__track {
+  width: 400vw;
+  flex-direction: row;
+  transform: translateX(var(--track-x, 0px));
+  will-change: transform;
 }
-@keyframes sweep {
-  0%   { top: 0; }
-  100% { top: 100%; }
+.js .process__step {
+  width: 100vw;
+  height: 100%;
+  padding: 24px 8vw 80px 8vw;
+  opacity: 0.18;
+  border-top: 0;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  align-items: center;
+  column-gap: clamp(24px, 4vw, 80px);
+  transition: opacity 320ms ease;
 }
+.js .process__step.is-active { opacity: 1; }
+.js .process__step-num { font-size: clamp(120px, 16vw, 240px); }
+.js .process-sonar__ping::after { animation: sonar-ping 1.4s ease-in-out infinite; }
+.js .process__counter { display: flex; }
 
-/* Browsers without view() support: hide the sweep + sonar so
-   nothing breaks the layout. The rail fill defaults to scaleY(0)
-   (no fill) which is fine — the active step's lime dot still
-   marks progress. */
-@supports not (animation-timeline: view()) {
-  .timeline__sweep,
-  .process-sonar__ping::after { display: none; }
-  .timeline__rail::after {
-    animation: none;
-    /* Default to fully filled so the rail is visible in browsers
-       that don't get the scroll-driven fill. */
-    transform: scaleY(1);
-  }
-}
-
-/* Reduced motion: skip all scroll-driven animations, show full
-   rail fill, hide the sweep (the visual benefit is the linear
-   motion which is exactly what we want to suppress). */
+/* Reduced motion: skip horizontal scroll, show all steps stacked
+   vertically with no animations. */
 @media (prefers-reduced-motion: reduce) {
-  .timeline__rail::after,
-  .timeline__sweep {
-    animation: none;
+  .process { height: auto; }
+  .process__sticky {
+    position: relative;
+    height: auto;
+    overflow: visible;
   }
-  .timeline__rail::after { transform: scaleY(1); }
-  .timeline__sweep { display: none; }
+  .process__track {
+    width: 100%;
+    flex-direction: column;
+    transform: none;
+  }
+  .process__step {
+    width: 100%;
+    height: auto;
+    padding: 56px 24px;
+    border-top: 1px solid var(--ink);
+    opacity: 1;
+  }
+  .process__step:first-child { border-top: 0; }
+  .process__step-text .word {
+    color: var(--ink);
+    transition: none;
+  }
+  .process__step-bullets li {
+    opacity: 1;
+    transition: none;
+  }
   .process-sonar__ping::after { animation: none; }
-  .now-reading__dot { animation: none; }
+  .process__counter { display: none; }
 }
-
 /* ------------------------------------------------------------
-   PROCESS MOBILE — the desktop layout uses 60-140px col 1, but
-   on small screens that eats too much horizontal real estate.
-   Mobile rules shrink the column, push the rail inward, and
-   let the status bar wrap.
+   PROCESS MOBILE — the horizontal scroll still works on mobile
+   (the scroll direction is vertical, only the visual motion is
+   horizontal), but we shrink the step number + body font to fit
+   narrow viewports.
    ------------------------------------------------------------ */
 @media (max-width: 900px) {
   .process-sonar {
-    top: 44px;  /* mobile nav is shorter */
-    margin: 0 -16px 20px;
-    padding: 6px 12px;
+    top: 44px;       /* mobile nav is shorter */
+    padding: 6px 16px;
     font-size: 10px;
     gap: 6px;
     flex-wrap: wrap;
   }
   .process-sonar__count { margin-left: auto; }
-  .now-reading { margin-bottom: 24px; }
-  .timeline__sweep {
-    left: calc(50px - 26px);
+  .section__head--inline { padding: 0 16px; }
+  .process__step {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    row-gap: 16px;
+    padding: 24px 16px 64px;
   }
+  .process__step-num { font-size: clamp(80px, 24vw, 140px); }
+  .process__step-title { font-size: clamp(24px, 7vw, 40px); }
+  .process__counter { padding: 10px 16px; }
 }
-
-/* The rail is filled by scaling the ::before of each step's active dot, but
-   we want a continuous fill. Use a separate absolute layer. */
-.timeline__step.is-active .timeline__no,
-.timeline__step.is-active .timeline__title { color: var(--ink); }
-.timeline__step.is-active .timeline__count { color: var(--ink); }
-
-/* The rail is filled by scaling the ::after of .timeline__rail (set by JS). */
 
 /* -------- ABOUT -------- */
 .about { padding: 80px 24px; border-bottom: 1px solid var(--ink); }
@@ -1317,10 +1346,67 @@ main { padding-top: 60px; } /* nav clearance */
   .card__btn { padding: 6px 7px; font-size: 10px; }
   .card__ctas { gap: 4px; }
 
-  /* Process / timeline */
-  .process { padding: 56px 16px; }
-  .timeline { padding-left: 56px; }
-  .timeline__step::before { left: -48px; }
+  /* Process section — single-column on mobile, bigger text. */
+  .process {
+    /* On mobile, the horizontal scroll is still 4 viewports of
+       scroll range, but each step is now a single column inside
+       the sticky child so the text doesn't get crushed. */
+    padding: 0;
+  }
+  .js .process {
+    height: 400vh; /* keep 4 viewports of scroll for the track */
+  }
+  .js .process__sticky {
+    height: 100vh;
+    padding: 16px 0 0 0;
+  }
+  .js .process__step {
+    width: 100vw;
+    padding: 16px 20px 80px 20px;
+    /* Single column: big number on top, text below. */
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    column-gap: 0;
+    row-gap: 24px;
+  }
+  .js .process__step-body {
+    /* Body text spans the full width below the number. */
+    width: 100%;
+  }
+  .js .process__step-num {
+    /* Big number sits in the top half, takes about 35vh. */
+    font-size: clamp(96px, 30vw, 200px);
+    line-height: 0.85;
+  }
+  .js .process__step-title {
+    /* Title is full opacity ink (not the faded --mute look). */
+    color: var(--ink) !important;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+  }
+  .js .process__step-count {
+    color: var(--ink);
+  }
+  .js .process__step-text {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+  .js .process__step-text .word {
+    /* On mobile, keep all words in --ink for legibility. The
+       per-word highlight effect is desktop-only since mobile
+       viewports are too narrow to read the gradient. */
+    color: var(--ink) !important;
+  }
+  .js .process__step-bullets {
+    font-size: 11px;
+    line-height: 1.5;
+    max-width: 100%;
+  }
+  .js .process__step-bullets li {
+    opacity: 1 !important;
+  }
 
   /* About stacks */
   .about { padding: 56px 16px; }

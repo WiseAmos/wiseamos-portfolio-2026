@@ -6,6 +6,13 @@
 (function () {
   'use strict';
 
+  // Mark the page as JS-enabled. The CSS uses .js to switch from
+  // the no-JS vertical-list layout to the pinned horizontal scroll.
+  // Adding the class ASAP (before the IIFEs run) avoids a flash of
+  // wrong layout.
+  document.documentElement.classList.add('js');
+  document.documentElement.classList.remove('no-js');
+
   // ------------------------------------------------------------
   // SPLASH — full-viewport overlay. Dismisses on
   //   - 2.5s timeout (default)
@@ -185,52 +192,103 @@
   })();
 
   // ------------------------------------------------------------
-  // TIMELINE — highlights the active step (driven by app.js IO so
-  // it works even where CSS view() doesn't — Safari pre-26, mobile
-  // quirks). The rail fill, sweep, and status-bar interactions are
-  // driven by native CSS animation-timeline: view() (see styles.css).
+  // PROCESS — drives the track transform, active step, counter,
+  // and word highlight for the pinned horizontal scroll section.
+  // JS is the single source of truth for the track position so
+  // it always agrees with the .is-active class on the visible step.
   // ------------------------------------------------------------
-  (function timeline() {
-    const section = document.querySelector('.timeline');
-    const rail = document.querySelector('.timeline__rail');
-    const steps = Array.from(document.querySelectorAll('.timeline__step'));
-    if (!section || !rail || !steps.length) return;
-    // No-op hook for status bar / NOW READING updates when active changes.
+  (function process() {
+    const section = document.querySelector('.process');
+    const track = document.querySelector('[data-track]');
+    const steps = Array.from(document.querySelectorAll('.process__step'));
+    if (!section || !track || !steps.length) return;
+
+    // Cache each step's words (so we don't querySelectorAll on every
+    // scroll event). The bullet LIs are also cached so we can light
+    // them up as the step's "highlight playhead" crosses them.
+    const stepData = steps.map(step => {
+      const words = Array.from(step.querySelectorAll('.word'));
+      const bullets = Array.from(step.querySelectorAll('.process__step-bullets li'));
+      return { el: step, words, bullets };
+    });
+
     const statusNum = document.querySelector('[data-sonar-current]');
     const statusHits = document.querySelector('[data-sonar-hits]');
-    const nowReading = document.querySelector('[data-now-reading-num]');
-    const hexChars = '0123456789ABCDEF';
+    const stepCurrent = document.querySelector('[data-step-current]');
     const hitSet = new Set();
     function update() {
       const r = section.getBoundingClientRect();
       const vh = window.innerHeight;
-      // active step = the deepest one whose top has passed the start line
-      let active = -1;
-      steps.forEach((s, i) => {
-        const sr = s.getBoundingClientRect();
-        if (sr.top < vh * 0.5) active = i;
-      });
+      const vw = window.innerWidth;
+      const scrollable = r.height - vh;
+      // scrolled: how far past the top of the section the user has
+      // scrolled. r.top = 0 → scrolled = 0. r.top = -scrollable →
+      // scrolled = scrollable. r.top > 0 → scrolled clamped to 0.
+      const scrolled = Math.max(0, -r.top);
+      const progress = scrollable > 0 ? Math.min(1, scrolled / scrollable) : 0;
+      // Track translateX: 0 → -3 * vw in 4 discrete steps. The
+      // track is at -0vw, -1vw, -2vw, or -3vw depending on the
+      // active step, with a CSS transition smoothing the jump.
+      // This keeps the active step CENTERED in the viewport
+      // (instead of mid-transition like a smooth slide would do),
+      // which avoids the "cut-off text" problem on narrow viewports
+      // where the active step would otherwise be partially off-screen.
+      //   step 1: 0      → 1/4   → track 0
+      //   step 2: 1/4    → 1/2   → track -1vw
+      //   step 3: 1/2    → 3/4   → track -2vw
+      //   step 4: 3/4    → 1     → track -3vw
+      const active = progress < (1/4) ? 0
+                   : progress < (1/2) ? 1
+                   : progress < (3/4) ? 2
+                   : 3;
+      const trackX = -active * vw;
+      track.style.transform = `translateX(${trackX}px)`;
       steps.forEach((s, i) => s.classList.toggle('is-active', i === active));
-      // Hex flash on the step number when it first becomes active.
-      if (active >= 0 && !hitSet.has(active)) {
-        hitSet.add(active);
-        const noEl = steps[active].querySelector('.timeline__no');
-        if (noEl) {
-          const final = noEl.textContent;
-          let frames = 0;
-          const id = setInterval(() => {
-            noEl.textContent = hexChars[Math.floor(Math.random() * 16)] +
-                               hexChars[Math.floor(Math.random() * 16)];
-            frames++;
-            if (frames > 5) { clearInterval(id); noEl.textContent = final; }
-          }, 60);
-        }
-      }
-      // Status bar: which step is currently shown
-      if (statusNum) statusNum.textContent = String(Math.max(0, active + 1)).padStart(2, '0');
-      if (nowReading) nowReading.textContent = String(Math.max(0, active + 1)).padStart(2, '0');
-      // Hit counter: how many unique steps have been visited
-      if (statusHits) statusHits.textContent = String(hitSet.size).padStart(2, '0');
+      // Word highlight: each step owns a quarter of the section's
+      // scroll range. The track moves in discrete jumps (one per
+      // step), so the active step's range is exactly 1/4:
+      //   step 1: 0      → 1/4
+      //   step 2: 1/4    → 1/2
+      //   step 3: 1/2    → 3/4
+      //   step 4: 3/4    → 1
+      // Within a step's range, the step's words light up one by
+      // one as the user scrolls through.
+      const ranges = [
+        [0,   1/4],
+        [1/4, 1/2],
+        [1/2, 3/4],
+        [3/4, 1  ],
+      ];
+      stepData.forEach((sd, stepIdx) => {
+        const [sStart, sEnd] = ranges[stepIdx];
+        const stepSpan = sEnd - sStart;
+        const stepProgress = Math.max(0, Math.min(1, (progress - sStart) / stepSpan));
+        // Words
+        const wn = sd.words.length;
+        sd.words.forEach((word, wi) => {
+          const threshold = wn > 0 ? (wi / wn) : 0;
+          const isLit = stepProgress >= threshold;
+          if (isLit && word.dataset.lit !== '1') {
+            word.style.color = 'var(--ink)';
+            word.dataset.lit = '1';
+          } else if (!isLit && word.dataset.lit === '1') {
+            word.style.color = 'var(--mute)';
+            word.dataset.lit = '';
+          }
+        });
+        // Bullets — light up in the last 20% of the step's range.
+        sd.bullets.forEach((li, bi) => {
+          const threshold = 0.8 + (bi / Math.max(1, sd.bullets.length)) * 0.2;
+          const isLit = stepProgress >= threshold;
+          li.style.opacity = isLit ? '1' : '0.4';
+        });
+      });
+      // Hit counter + SONAR + step counter text.
+      if (active >= 0 && !hitSet.has(active)) hitSet.add(active);
+      const display = String(active + 1).padStart(2, '0');
+      if (statusNum) statusNum.textContent = display;
+      if (statusHits) statusHits.textContent = String(Math.max(1, hitSet.size)).padStart(2, '0');
+      if (stepCurrent) stepCurrent.textContent = display;
     }
     let ticking = false;
     addEventListener('scroll', () => {

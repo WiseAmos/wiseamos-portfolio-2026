@@ -168,9 +168,13 @@
          4 steps, scroll-tied rail fill.
          ======================================================== -->
     <section id="process" class="process" data-reveal>
-      <div class="wrap">
-        <!-- Sticky SONAR status bar. Pinned to top of section, shows
-             which step is current + how many have been "hit". -->
+      <!-- "Pinned horizontal scroll" — section is 4 viewport heights tall
+           (provides the scroll range), inside is a sticky child that stays
+           pinned to the viewport. The 4 steps inside the sticky child
+           slide horizontally (left → right) as the user scrolls vertically.
+           Each step's body words highlight progressively as the step
+           becomes the focus. -->
+      <div class="process__sticky">
         <div class="process-sonar" aria-hidden="true">
           <span class="process-sonar__ping"></span>
           <span>sonar</span>
@@ -178,83 +182,85 @@
           <span>process.section</span>
           <span class="process-sonar__sep">·</span>
           <span>step</span>
-          <span class="process-sonar__current" data-sonar-current>00</span>
+          <span class="process-sonar__current" data-sonar-current>01</span>
           <span class="process-sonar__count">
-            <span data-sonar-hits>00</span> / 04 hit
+            <span data-sonar-hits>01</span> / 04
           </span>
         </div>
 
-        <header class="section__head">
+        <header class="section__head section__head--inline">
           <span class="eyebrow">02 — PROCESS</span>
           <h2 class="h2" data-flap>HOW I<br/>BUILD <span class="fill-accent">THINGS</span>.</h2>
-          <p class="body-text">Four modes, mixed and matched depending on the problem. None of them are sacred.</p>
         </header>
 
-        <!-- NOW READING — pill that names the step currently
-             centered in the viewport. Updated by app.js timeline IIFE. -->
-        <div class="now-reading" aria-live="polite">
-          <span class="now-reading__dot"></span>
-          <span>Now reading: step <span data-now-reading-num>00</span> / 04</span>
-        </div>
-
-        <ol class="timeline" aria-label="Process steps">
-          <span class="timeline__rail" aria-hidden="true"></span>
-          <!-- The horizontal sweep that travels down the rail
-               as the user scrolls. Driven by CSS view(). -->
-          <span class="timeline__sweep" aria-hidden="true"></span>
-
-          <li class="timeline__step">
-            <span class="timeline__no">01</span>
-            <div class="timeline__content">
-              <h3 class="timeline__title">STATEFUL <span class="timeline__count">· 60%</span></h3>
-              <p class="timeline__body">Real-time stateful systems &mdash; inputs and outputs coupled, feedback tight. The kind where you can't lie about the latency budget because the test fails.</p>
-              <ul class="timeline__bullets">
+        <div class="process__track" data-track>
+          <article class="process__step is-active" data-step="1">
+            <div class="process__step-num">01</div>
+            <div class="process__step-body">
+              <h3 class="process__step-title">STATEFUL <span class="process__step-count">· 60%</span></h3>
+              <p class="process__step-text">
+                <span class="word">Real-time</span> <span class="word">stateful</span> <span class="word">systems</span> <span class="word">&mdash;</span> <span class="word">inputs</span> <span class="word">and</span> <span class="word">outputs</span> <span class="word">coupled,</span> <span class="word">feedback</span> <span class="word">tight.</span> <span class="word">The</span> <span class="word">kind</span> <span class="word">where</span> <span class="word">you</span> <span class="word">can't</span> <span class="word">lie</span> <span class="word">about</span> <span class="word">the</span> <span class="word">latency</span> <span class="word">budget</span> <span class="word">because</span> <span class="word">the</span> <span class="word">test</span> <span class="word">fails.</span>
+              </p>
+              <ul class="process__step-bullets">
                 <li>drones, control loops, trading</li>
                 <li>events in, events out, no drama</li>
                 <li>logs you can grep at 3am</li>
               </ul>
             </div>
-          </li>
+          </article>
 
-          <li class="timeline__step">
-            <span class="timeline__no">02</span>
-            <div class="timeline__content">
-              <h3 class="timeline__title">DETERMINISTIC <span class="timeline__count">· 25%</span></h3>
-              <p class="timeline__body">Deterministic, predictable loops &mdash; bounded, observable, never surprising. The boring backbone that lets the interesting parts stay interesting.</p>
-              <ul class="timeline__bullets">
+          <article class="process__step" data-step="2">
+            <div class="process__step-num">02</div>
+            <div class="process__step-body">
+              <h3 class="process__step-title">DETERMINISTIC <span class="process__step-count">· 25%</span></h3>
+              <p class="process__step-text">
+                <span class="word">Deterministic,</span> <span class="word">predictable</span> <span class="word">loops</span> <span class="word">&mdash;</span> <span class="word">bounded,</span> <span class="word">observable,</span> <span class="word">never</span> <span class="word">surprising.</span> <span class="word">The</span> <span class="word">boring</span> <span class="word">backbone</span> <span class="word">that</span> <span class="word">lets</span> <span class="word">the</span> <span class="word">interesting</span> <span class="word">parts</span> <span class="word">stay</span> <span class="word">interesting.</span>
+              </p>
+              <ul class="process__step-bullets">
                 <li>queues, batch jobs, pipelines</li>
                 <li>idempotent, retried, audited</li>
                 <li>tests that actually catch the bug</li>
               </ul>
             </div>
-          </li>
+          </article>
 
-          <li class="timeline__step">
-            <span class="timeline__no">03</span>
-            <div class="timeline__content">
-              <h3 class="timeline__title">STRUCTURED <span class="timeline__count">· 10%</span></h3>
-              <p class="timeline__body">Structured, faceted decisions &mdash; many small surfaces, one coherent whole. The kind of code that gets read more than written.</p>
-              <ul class="timeline__bullets">
+          <article class="process__step" data-step="3">
+            <div class="process__step-num">03</div>
+            <div class="process__step-body">
+              <h3 class="process__step-title">STRUCTURED <span class="process__step-count">· 10%</span></h3>
+              <p class="process__step-text">
+                <span class="word">Structured,</span> <span class="word">faceted</span> <span class="word">decisions</span> <span class="word">&mdash;</span> <span class="word">many</span> <span class="word">small</span> <span class="word">surfaces,</span> <span class="word">one</span> <span class="word">coherent</span> <span class="word">whole.</span> <span class="word">The</span> <span class="word">kind</span> <span class="word">of</span> <span class="word">code</span> <span class="word">that</span> <span class="word">gets</span> <span class="word">read</span> <span class="word">more</span> <span class="word">than</span> <span class="word">written.</span>
+              </p>
+              <ul class="process__step-bullets">
                 <li>domain models, schemas, types</li>
                 <li>typed boundaries, not linter religion</li>
                 <li>docs that match the code</li>
               </ul>
             </div>
-          </li>
+          </article>
 
-          <li class="timeline__step">
-            <span class="timeline__no">04</span>
-            <div class="timeline__content">
-              <h3 class="timeline__title">EMERGENT <span class="timeline__count">· 5%</span></h3>
-              <p class="timeline__body">Exploration at scale &mdash; many actors, one emerging pattern. Reserved for the projects where the answer isn't known yet and the budget is to find it.</p>
-            <ul class="timeline__bullets">
-              <li>multi-agent systems, sims, RL</li>
-              <li>research code that ships anyway</li>
-              <li>honest eval, not vibes</li>
-            </ul>
+          <article class="process__step" data-step="4">
+            <div class="process__step-num">04</div>
+            <div class="process__step-body">
+              <h3 class="process__step-title">EMERGENT <span class="process__step-count">· 5%</span></h3>
+              <p class="process__step-text">
+                <span class="word">Exploration</span> <span class="word">at</span> <span class="word">scale</span> <span class="word">&mdash;</span> <span class="word">many</span> <span class="word">actors,</span> <span class="word">one</span> <span class="word">emerging</span> <span class="word">pattern.</span> <span class="word">Reserved</span> <span class="word">for</span> <span class="word">the</span> <span class="word">projects</span> <span class="word">where</span> <span class="word">the</span> <span class="word">answer</span> <span class="word">isn't</span> <span class="word">known</span> <span class="word">yet</span> <span class="word">and</span> <span class="word">the</span> <span class="word">budget</span> <span class="word">is</span> <span class="word">to</span> <span class="word">find</span> <span class="word">it.</span>
+              </p>
+              <ul class="process__step-bullets">
+                <li>multi-agent systems, sims, RL</li>
+                <li>research code that ships anyway</li>
+                <li>honest eval, not vibes</li>
+              </ul>
             </div>
-          </li>
-        </ol>
+          </article>
+        </div>
+
+        <div class="process__counter" aria-hidden="true">
+          <span data-step-current>01</span>
+          <span class="process__counter-sep">/</span>
+          <span>04</span>
+          <span class="process__counter-rule"></span>
+        </div>
       </div>
     </section>
 
