@@ -642,8 +642,7 @@ main { padding-top: 60px; } /* nav clearance */
   justify-content: space-between;
   gap: 12px;
   margin-top: auto; /* pin to bottom regardless of desc length */
-  padding-top: 8px;
-  border-top: 1px dashed var(--ink);
+  padding-top: 10px;
   flex-wrap: wrap;
 }
 .card__tags {
